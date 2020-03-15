@@ -1,0 +1,72 @@
+//constantes
+
+pi=Math.PI;
+e=Math.E;
+
+//funciones
+
+//potencia
+power(a,n) {
+	if (a!=0 || n!=0) {
+		return Math.pow(a,n);
+	} else {
+		return null;
+	}
+}
+
+p(a,n) { return power(a,n); }
+pwr(a,n) { return power(a,n); }
+pot(a,n) { return power(a,n); }
+potencia(a,n) { return power(a,n); }
+
+//seno
+sin(a) {
+	return Math.sin(a);
+}
+
+sen(a) { return sin(a); }
+seno(a) { return sin(a); }
+
+//coseno
+cos(a) {
+	return Math.cos(a);
+}
+
+coseno(a) { return cos(a); }
+
+//tangente
+tan(a) {
+	return Math.tan(a);
+}
+
+tangente(a) { return tan(a); }
+
+//TODO agregar arcos?
+
+//logaritmo
+
+ln(a) { 
+	if(a!=0)
+		return Math.log(a);
+	return null;
+}
+
+log(a,b){
+	if(a!=0 && (b!=0 && Math.log(b)!= 0))
+		return Math.log(a) / Math.log(b);
+	return null;
+}
+
+log(a){ return log(a,10); }
+
+//absoluto
+abs(a){
+	return (a==null)?null:(a>0)?a:-a;
+}
+
+//entero
+toInt(a){
+	return (a==null)?null:Math.floor(a);
+}
+
+
