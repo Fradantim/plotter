@@ -14,8 +14,8 @@ public class Line implements Renderizable{
 	private Color color;
 	
 	public Line(Vector2 pointA, Vector2 pointB, Color color) {
-		this.pointA = pointA;
-		this.pointB = pointB;
+		this.pointA = new Vector2(pointA);
+		this.pointB = new Vector2(pointB);
 		this.color = color;
 	}
 

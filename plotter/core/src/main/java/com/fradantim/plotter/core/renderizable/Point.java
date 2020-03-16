@@ -11,7 +11,7 @@ public class Point implements Renderizable{
 	private Color color;
 	
 	public Point(Vector2 point, Color color) {
-		this.point = point;
+		this.point = new Vector2(point);
 		this.color = color;
 	}
 

@@ -1,5 +1,7 @@
 package com.fradantim.plotter.java;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
@@ -7,7 +9,8 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
 import com.fradantim.plotter.core.Plotter;
 import com.fradantim.plotter.java.processor.FunctionProcessor;
-import com.fradantim.plotter.java.processor.FunctionProcessor.RenderType;
+import com.fradantim.plotter.java.processor.PVIEulerProcessor;
+import com.fradantim.plotter.java.processor.ProblemaValorInicialProcessor;
 
 public class PlotterDesktop {
 	private static final Integer PIXELS_PER_POINT=100;
@@ -56,23 +59,45 @@ public class PlotterDesktop {
 			*/
 			
 			//derivacion
-			/*FunctionProcessor fp = new FunctionProcessor("t", "p(t,3)",PIXELS_PER_POINT);
-			p.addRenderizables(fp.getImage(domainPoints, Color.RED));
-			p.addRenderizables(fp.pointsToLines(fp.derivatePoints(fp.getImagePoints(domainPoints), Color.ORANGE)));*/
-
-
-			Color[] colors = {Color.RED,Color.ORANGE,Color.GOLD,Color.YELLOW,Color.GREEN};
-			String var="t";
-			//String function = "p(t,"+(colors.length-1)+")/16";
-			String function = "tan(t)";
-			FunctionProcessor fp = new FunctionProcessor(PIXELS_PER_POINT,p.getHeigth()/2);
+			/*
+			Color[] colors = {Color.BROWN,Color.MAGENTA,Color.RED,Color.ORANGE,Color.GOLD,Color.YELLOW,Color.GREEN,Color.BLUE};
+			List<String> vars=Arrays.asList("t");
+			String function = "p(t,"+(colors.length-1)+")/32";
+			//String function = "tan(t)";
 			
+			HashMap<String, List<Float>> elementsByVar= new HashMap<>();
+			elementsByVar.put(vars.get(0), domainPoints);
+			
+			LocalDateTime start = LocalDateTime.now();
 			for(int i=0; i< colors.length; i++) {				
-				p.addRenderizables(fp.getImage(var, function, domainPoints, PIXELS_PER_POINT, i, colors[i]));
+				p.addRenderizables(FunctionProcessor.getImage(vars, function, elementsByVar, PIXELS_PER_POINT, i, colors[i]));
 			}
+			LocalDateTime end = LocalDateTime.now();
 			
-			//p.addRenderizables(fp.pointsToLines(fp.derivatePoints(fp.getImagePoints(domainPoints), Color.ORANGE)));
 			
+			long seconds = start.until( end, ChronoUnit.SECONDS );
+			System.out.println("Duration: "+seconds+" seconds");
+			*/
+			
+			List<String> vars=Arrays.asList("t");
+			HashMap<String, List<Float>> elementsByVar= new HashMap<>();
+			elementsByVar.put(vars.get(0), domainPoints);
+			
+			p.addRenderizables(FunctionProcessor.getImage(vars, "p(t,2)", elementsByVar, PIXELS_PER_POINT, 0, Color.RED));
+			
+
+			ProblemaValorInicialProcessor eulerProcessor = new PVIEulerProcessor();
+			List<String> eulerVars=Arrays.asList("t","x");
+			
+			
+			eulerProcessor.fillValues(eulerVars, "2*t", 0F, 0F, 2F, 0.25F, null);			
+			p.addRenderizables(eulerProcessor.getImage(PIXELS_PER_POINT, Color.GREEN));
+			
+			eulerProcessor.fillValues(eulerVars, "2*t", 0F, 0F, 2F, 0.125F, null);			
+			p.addRenderizables(eulerProcessor.getImage(PIXELS_PER_POINT, Color.BLUE));
+			
+			eulerProcessor.fillValues(eulerVars, "2*t", 0F, 0F, 2F, 0.0625F, null);			
+			p.addRenderizables(eulerProcessor.getImage(PIXELS_PER_POINT, Color.YELLOW));
 			
 		} catch (Exception e) {
 			e.printStackTrace();

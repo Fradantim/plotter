@@ -257,12 +257,12 @@ public class Plotter implements ApplicationListener {
 	
 	public synchronized void addRenderizables(Collection<? extends Renderizable> renderizables) {
 		List<Renderizable> nuevosRenderizables= new ArrayList<>();
-		nuevosRenderizables.addAll(this.renderizables);
 		Vector2 center = getCenter();
 		renderizables.forEach(r -> {
 			r.scale(1F*pixelsPerPoint);
 			r.move(center);
 		});
+		nuevosRenderizables.addAll(this.renderizables);
 		nuevosRenderizables.addAll(renderizables);
 		
 		this.renderizables=nuevosRenderizables;

@@ -15,9 +15,9 @@ public class Triangle implements Renderizable{
 	private Color color;
 	
 	public Triangle(Vector2 pointA, Vector2 pointB, Vector2 pointC, Color color) {
-		this.pointA = pointA;
-		this.pointB = pointB;
-		this.pointC = pointC;
+		this.pointA = new Vector2(pointA);
+		this.pointB = new Vector2(pointB);
+		this.pointC = new Vector2(pointC);
 		this.color = color;
 	}
 
