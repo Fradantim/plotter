@@ -276,7 +276,7 @@ public class Plotter implements ApplicationListener {
 		if(domainPoints== null) {
 			List<Float> result = new ArrayList<>();
 			
-			for(int i=0; i< (int)getDisplayResolution().x/2/pixelsPerPoint; i++) {
+			for(int i=0; i< (int)getDisplayResolution().x/pixelsPerPoint; i++) {
 				for(float d=0; d<1;d+=1D/pixelsPerPoint) {
 					result.add(i+d);
 					result.add(-i-d);

@@ -71,6 +71,9 @@ public class FunctionProcessor {
 		return null;
 	}
 	
+	public static List<? extends Renderizable> getImage(List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint) throws EvalError, FileNotFoundException, IOException{
+		return getImage(vars, function, domainByVar, pointsPerPoint, 0);
+	}
 	
 	public static List<? extends Renderizable> getImage(List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times) throws EvalError, FileNotFoundException, IOException{
 		return getImage(vars, function, domainByVar, pointsPerPoint, times, RenderType.LINE);

@@ -14,7 +14,7 @@ import com.fradantim.plotter.java.processor.PVIEulerProcessor;
 import com.fradantim.plotter.java.processor.ProblemaValorInicialProcessor;
 
 public class PlotterDesktop {
-	private static final Integer PIXELS_PER_POINT=100;
+	private static final Integer PIXELS_PER_POINT=250;
 	
 	public static void main (String[] args) {
 		Plotter p = new Plotter();
@@ -68,10 +68,9 @@ public class PlotterDesktop {
 			
 			HashMap<String, List<Float>> elementsByVar= new HashMap<>();
 			elementsByVar.put(vars.get(0), domainPoints);
-			
 			LocalDateTime start = LocalDateTime.now();
-			for(int i=0; i< colors.length; i++) {				
-				p.addRenderizables(FunctionProcessor.getImage(vars, function, elementsByVar, PIXELS_PER_POINT, i, colors[i]));
+			for(int i=0; i< colors.length; i++) {
+				p.addRenderizables(Colorizer.colorize(FunctionProcessor.getImage(vars, function, elementsByVar, PIXELS_PER_POINT, i), colors[i]));
 			}
 			LocalDateTime end = LocalDateTime.now();
 			
@@ -81,30 +80,33 @@ public class PlotterDesktop {
 			*/
 			
 			
-			//
+			//Euler PVI
 			List<String> vars=Arrays.asList("t");
 			HashMap<String, List<Float>> elementsByVar= new HashMap<>();
 			elementsByVar.put(vars.get(0), domainPoints);
 			
-			String function = "p(t,2)";
-			String derivatedfunction = "2*t";
+			String functionA = "p(t,2)";
+			String derivatedfunctionA = "2*t";
 			
-			//String function = "p(t,0.5)";
-			//String derivatedfunction = "p(2*p(t,0.5),-1)";
+			String functionB = "-p(t,2)";
+			String derivatedfunctionB = "-2*t";
 			
-			p.addRenderizables(Colorizer.colorize(FunctionProcessor.getImage(vars, function, elementsByVar, PIXELS_PER_POINT, 0), Color.GREEN));
 			
+			p.addRenderizables(Colorizer.colorize(FunctionProcessor.getImage(vars, functionA, elementsByVar, PIXELS_PER_POINT), Color.GREEN));
+			p.addRenderizables(Colorizer.colorize(FunctionProcessor.getImage(vars, functionB, elementsByVar, PIXELS_PER_POINT), Color.BLUE));
 
 			ProblemaValorInicialProcessor eulerProcessor = new PVIEulerProcessor();
 			List<String> eulerVars=Arrays.asList("t","x");
 			
-			Color[] colors = {Color.BROWN,Color.RED,Color.ORANGE,Color.GOLD,Color.YELLOW};
+			Color[] colors = {Color.BROWN,Color.RED,Color.ORANGE,Color.GOLD,Color.YELLOW, Color.BLUE,Color.WHITE};
 			
 			for(int i=0; i< colors.length; i++) {	
 				System.out.println((i+1)+" "+1F/(Math.pow(2, i)));
-				p.addRenderizables(Colorizer.colorize(eulerProcessor.getImage(eulerVars, derivatedfunction, 0F, 0F, 2F, new Double(1F/(Math.pow(2, i))).floatValue(), null), colors[i]));
+				p.addRenderizables(Colorizer.colorize(eulerProcessor.getImage(eulerVars, derivatedfunctionA, 0F, 0F, 4F, new Double(1F/(Math.pow(2, i))).floatValue(), null), colors[i]));
+				p.addRenderizables(Colorizer.colorize(eulerProcessor.getImage(eulerVars, derivatedfunctionA, -4F, 16F, 0F, new Double(1F/(Math.pow(2, i))).floatValue(), null), colors[i]));
+				p.addRenderizables(Colorizer.colorize(eulerProcessor.getImage(eulerVars, derivatedfunctionB, 0F, 0F, -4F, new Double(1F/(Math.pow(2, i))).floatValue(), null), colors[i]));
+				p.addRenderizables(Colorizer.colorize(eulerProcessor.getImage(eulerVars, derivatedfunctionB, 4F, -16F, 0F, new Double(1F/(Math.pow(2, i))).floatValue(), null), colors[i]));
 			}
-			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

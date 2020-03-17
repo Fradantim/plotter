@@ -13,6 +13,7 @@ public class PVIEulerProcessor implements ProblemaValorInicialProcessor{
 
 	private List<String> vars;
 	private String function;
+	@SuppressWarnings("unused")
 	private Float t0, x0, T, h;
 	private Integer N;
 	
@@ -31,9 +32,9 @@ public class PVIEulerProcessor implements ProblemaValorInicialProcessor{
 		this.N=N;
 		
 		if(N==null) {
-			this.N=new Float(Math.ceil((T-t0)/h)).intValue();
+			this.N=new Float(Math.abs(Math.ceil((T-t0)/h))).intValue();
 		}else {
-			this.h=new Float(Math.ceil((T-t0)/N));
+			this.h=new Float(Math.abs(Math.ceil((T-t0)/N)));
 		}
 		
 		List<Renderizable> result = new ArrayList<Renderizable>();
@@ -41,7 +42,7 @@ public class PVIEulerProcessor implements ProblemaValorInicialProcessor{
 		List<Vector2> puntos= new ArrayList<>();
 			
 		for(int i=0; i<=this.N; i++) {
-			Float t= t0+i*this.h;
+			Float t= t0+i*this.h*((t0<T)?1:-1);
 			puntos.add(new Vector2(t, getValue(t)));
 		}
 		
@@ -57,15 +58,13 @@ public class PVIEulerProcessor implements ProblemaValorInicialProcessor{
 			if(t.equals(t0)) {
 				return x0;
 			}else {
-				Float previousValue=getValue(t-h);
-				if(previousValue==null)
-					return null;
+				Float previousValue=getValue(t-(h*(t0<T?1:-1)));
 				
 				Map<String, Float> elementByVar= new HashMap<String, Float>();
-				elementByVar.put(vars.get(0), t-h);
+				elementByVar.put(vars.get(0), t-h*(t0<T?1:-1));
 				elementByVar.put(vars.get(1), previousValue.floatValue());
 				
-				Float newValue=previousValue+h*FunctionProcessor.getImageAtElement(vars, function, elementByVar).floatValue();
+				Float newValue=previousValue+h*FunctionProcessor.getImageAtElement(vars, function, elementByVar).floatValue()*(t0<T?1:-1);
 				return newValue;
 			}
 		} catch (Exception e) {
