@@ -20,6 +20,10 @@ public class Triangle implements Renderizable{
 		this.pointC = new Vector2(pointC);
 		this.color = color;
 	}
+	
+	public Triangle(Vector2 pointA, Vector2 pointB, Vector2 pointC) {
+		this(pointA,pointB,pointC,DEFAULT_COLOR);
+	}
 
 	@Override
 	public void render(ShapeRenderer shapeRenderer, Color color) {
@@ -45,7 +49,12 @@ public class Triangle implements Renderizable{
 	public Color getColor() {
 		return color;
 	}
-
+	
+	@Override
+	public void setColor(Color color) {
+		this.color=color;		
+	}
+	
 	@Override
 	public void move(Vector2 vector) {
 		for(Vector2 point: Arrays.asList(pointA,pointB,pointC))
@@ -56,5 +65,5 @@ public class Triangle implements Renderizable{
 	public void scale(Float scale) {
 		for(Vector2 point: Arrays.asList(pointA,pointB,pointC))
 			point.scl(scale);
-	}
+	}	
 }

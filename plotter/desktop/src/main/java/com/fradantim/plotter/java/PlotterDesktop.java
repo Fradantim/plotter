@@ -8,6 +8,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
 import com.fradantim.plotter.core.Plotter;
+import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 import com.fradantim.plotter.java.processor.FunctionProcessor;
 import com.fradantim.plotter.java.processor.PVIEulerProcessor;
 import com.fradantim.plotter.java.processor.ProblemaValorInicialProcessor;
@@ -79,25 +80,31 @@ public class PlotterDesktop {
 			System.out.println("Duration: "+seconds+" seconds");
 			*/
 			
+			
+			//
 			List<String> vars=Arrays.asList("t");
 			HashMap<String, List<Float>> elementsByVar= new HashMap<>();
 			elementsByVar.put(vars.get(0), domainPoints);
 			
-			p.addRenderizables(FunctionProcessor.getImage(vars, "p(t,2)", elementsByVar, PIXELS_PER_POINT, 0, Color.RED));
+			String function = "p(t,2)";
+			String derivatedfunction = "2*t";
+			
+			//String function = "p(t,0.5)";
+			//String derivatedfunction = "p(2*p(t,0.5),-1)";
+			
+			p.addRenderizables(Colorizer.colorize(FunctionProcessor.getImage(vars, function, elementsByVar, PIXELS_PER_POINT, 0), Color.GREEN));
 			
 
 			ProblemaValorInicialProcessor eulerProcessor = new PVIEulerProcessor();
 			List<String> eulerVars=Arrays.asList("t","x");
 			
+			Color[] colors = {Color.BROWN,Color.RED,Color.ORANGE,Color.GOLD,Color.YELLOW};
 			
-			eulerProcessor.fillValues(eulerVars, "2*t", 0F, 0F, 2F, 0.25F, null);			
-			p.addRenderizables(eulerProcessor.getImage(PIXELS_PER_POINT, Color.GREEN));
+			for(int i=0; i< colors.length; i++) {	
+				System.out.println((i+1)+" "+1F/(Math.pow(2, i)));
+				p.addRenderizables(Colorizer.colorize(eulerProcessor.getImage(eulerVars, derivatedfunction, 0F, 0F, 2F, new Double(1F/(Math.pow(2, i))).floatValue(), null), colors[i]));
+			}
 			
-			eulerProcessor.fillValues(eulerVars, "2*t", 0F, 0F, 2F, 0.125F, null);			
-			p.addRenderizables(eulerProcessor.getImage(PIXELS_PER_POINT, Color.BLUE));
-			
-			eulerProcessor.fillValues(eulerVars, "2*t", 0F, 0F, 2F, 0.0625F, null);			
-			p.addRenderizables(eulerProcessor.getImage(PIXELS_PER_POINT, Color.YELLOW));
 			
 		} catch (Exception e) {
 			e.printStackTrace();

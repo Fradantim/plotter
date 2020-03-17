@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.renderizable.Line;
@@ -73,16 +72,16 @@ public class FunctionProcessor {
 	}
 	
 	
-	public static List<? extends Renderizable> getImage(List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times, Color color) throws EvalError, FileNotFoundException, IOException{
-		return getImage(vars, function, domainByVar, pointsPerPoint, times, color, RenderType.LINE);
+	public static List<? extends Renderizable> getImage(List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times) throws EvalError, FileNotFoundException, IOException{
+		return getImage(vars, function, domainByVar, pointsPerPoint, times, RenderType.LINE);
 	}
 	
-	public static List<? extends Renderizable> getImage(List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times, Color color, RenderType renderType) throws EvalError, FileNotFoundException, IOException{
+	public static List<? extends Renderizable> getImage(List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times, RenderType renderType) throws EvalError, FileNotFoundException, IOException{
 		Interpreter interpreter= getInterpreter();
-		return getImage(interpreter, vars, function, domainByVar, pointsPerPoint, times, color, renderType);
+		return getImage(interpreter, vars, function, domainByVar, pointsPerPoint, times, renderType);
 	}
 	
-	private static List<? extends Renderizable> getImage(Interpreter interpreter, List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times, Color color, RenderType renderType) throws EvalError {
+	private static List<? extends Renderizable> getImage(Interpreter interpreter, List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times, RenderType renderType) throws EvalError {
 		List<Point> derivatedPoints = new ArrayList<>();
 		
 		if(vars.size()!=domainByVar.size()){
@@ -101,7 +100,7 @@ public class FunctionProcessor {
 			Double value=getImageAtElement(interpreter, vars, function, elementByVar, pointsPerPoint, times);
 			
 			if(value !=null) {
-				derivatedPoints.add(new Point(new Vector2(element,value.floatValue()), color));
+				derivatedPoints.add(new Point(new Vector2(element,value.floatValue())));
 			}
 			
 		}

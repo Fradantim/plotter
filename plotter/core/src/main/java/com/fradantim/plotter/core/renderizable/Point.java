@@ -14,6 +14,10 @@ public class Point implements Renderizable{
 		this.point = new Vector2(point);
 		this.color = color;
 	}
+	
+	public Point(Vector2 pointA) {
+		this(pointA,DEFAULT_COLOR);
+	}
 
 	@Override
 	public void render(ShapeRenderer shapeRenderer, Color color) {
@@ -44,5 +48,10 @@ public class Point implements Renderizable{
 	
 	public String toString() {
 		return this.getClass().getSimpleName()+" "+point;
+	}
+
+	@Override
+	public void setColor(Color color) {
+		this.color=color;
 	}
 }

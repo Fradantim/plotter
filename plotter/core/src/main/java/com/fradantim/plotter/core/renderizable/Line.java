@@ -18,6 +18,10 @@ public class Line implements Renderizable{
 		this.pointB = new Vector2(pointB);
 		this.color = color;
 	}
+	
+	public Line(Vector2 pointA, Vector2 pointB) {
+		this(pointA,pointB,DEFAULT_COLOR);
+	}
 
 	@Override
 	public void render(ShapeRenderer shapeRenderer, Color color) {
@@ -38,6 +42,11 @@ public class Line implements Renderizable{
 	@Override
 	public Color getColor() {
 		return color;
+	}
+	
+	@Override
+	public void setColor(Color color) {
+		this.color=color;
 	}
 
 	@Override
