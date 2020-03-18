@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.fradantim.plotter.core.Renderizable;
 
 public class Colorizer {
+	
+	public static final Color DEFAULT_COLOR= Color.WHITE;
 
 	public static Renderizable colorize(Renderizable renderizable, Color color) {
 		renderizable.setColor(color);

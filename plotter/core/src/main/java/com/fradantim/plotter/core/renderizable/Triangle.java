@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.fradantim.plotter.core.Renderizable;
+import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 
 public class Triangle implements Renderizable{
 
@@ -22,7 +23,7 @@ public class Triangle implements Renderizable{
 	}
 	
 	public Triangle(Vector2 pointA, Vector2 pointB, Vector2 pointC) {
-		this(pointA,pointB,pointC,DEFAULT_COLOR);
+		this(pointA,pointB,pointC,Colorizer.DEFAULT_COLOR);
 	}
 
 	@Override

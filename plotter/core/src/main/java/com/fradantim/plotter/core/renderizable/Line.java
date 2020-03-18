@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.fradantim.plotter.core.Renderizable;
+import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 
 public class Line implements Renderizable{
 
@@ -20,7 +21,7 @@ public class Line implements Renderizable{
 	}
 	
 	public Line(Vector2 pointA, Vector2 pointB) {
-		this(pointA,pointB,DEFAULT_COLOR);
+		this(pointA,pointB,Colorizer.DEFAULT_COLOR);
 	}
 
 	@Override

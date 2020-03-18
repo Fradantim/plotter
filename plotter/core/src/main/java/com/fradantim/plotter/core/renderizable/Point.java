@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.fradantim.plotter.core.Renderizable;
+import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 
 public class Point implements Renderizable{
 
@@ -16,7 +17,7 @@ public class Point implements Renderizable{
 	}
 	
 	public Point(Vector2 pointA) {
-		this(pointA,DEFAULT_COLOR);
+		this(pointA,Colorizer.DEFAULT_COLOR);
 	}
 
 	@Override
