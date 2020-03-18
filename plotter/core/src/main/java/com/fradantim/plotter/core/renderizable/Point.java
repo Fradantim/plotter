@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 
-public class Point implements Renderizable{
+public class Point implements Renderizable<Point>{
 
 	private Vector2 point;
 	private Color color;
@@ -54,5 +54,10 @@ public class Point implements Renderizable{
 	@Override
 	public void setColor(Color color) {
 		this.color=color;
+	}
+
+	@Override
+	public Point getCopy() {
+		return new Point(point.cpy());
 	}
 }

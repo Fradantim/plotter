@@ -3,7 +3,7 @@ package com.fradantim.plotter.core;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-public interface Renderizable extends Movable, Scalable{
+public interface Renderizable<T> extends Movable, Scalable, Copyable<T>{
 	
 	public Color getColor();
 	

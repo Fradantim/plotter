@@ -26,8 +26,8 @@ public class FunctionProcessor {
 	}
 	
 	/** Lines so that distant point which should be connected are. */
-	public static List<? extends Renderizable> pointsToLines(List<Point> points, Integer pointsPerPoints){
-		List<Renderizable> lines = new ArrayList<>();
+	public static List<? extends Renderizable<?>> pointsToLines(List<Point> points, Integer pointsPerPoints){
+		List<Renderizable<?>> lines = new ArrayList<>();
 		
 		for(int i=0; i<points.size()-1;i++) {
 			Point pointA = points.get(i);
@@ -71,20 +71,20 @@ public class FunctionProcessor {
 		return null;
 	}
 	
-	public static List<? extends Renderizable> getImage(List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint) throws EvalError, FileNotFoundException, IOException{
+	public static List<? extends Renderizable<?>> getImage(List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint) throws EvalError, FileNotFoundException, IOException{
 		return getImage(vars, function, domainByVar, pointsPerPoint, 0);
 	}
 	
-	public static List<? extends Renderizable> getImage(List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times) throws EvalError, FileNotFoundException, IOException{
+	public static List<? extends Renderizable<?>> getImage(List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times) throws EvalError, FileNotFoundException, IOException{
 		return getImage(vars, function, domainByVar, pointsPerPoint, times, RenderType.LINE);
 	}
 	
-	public static List<? extends Renderizable> getImage(List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times, RenderType renderType) throws EvalError, FileNotFoundException, IOException{
+	public static List<? extends Renderizable<?>> getImage(List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times, RenderType renderType) throws EvalError, FileNotFoundException, IOException{
 		Interpreter interpreter= getInterpreter();
 		return getImage(interpreter, vars, function, domainByVar, pointsPerPoint, times, renderType);
 	}
 	
-	private static List<? extends Renderizable> getImage(Interpreter interpreter, List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times, RenderType renderType) throws EvalError {
+	private static List<? extends Renderizable<?>> getImage(Interpreter interpreter, List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times, RenderType renderType) throws EvalError {
 		List<Point> derivatedPoints = new ArrayList<>();
 		
 		if(vars.size()!=domainByVar.size()){
@@ -116,7 +116,7 @@ public class FunctionProcessor {
 				return pointsToLines(derivatedPoints, pointsPerPoint);
 			}
 			case BOTH: {
-				List<Renderizable> result = new ArrayList<>(); 
+				List<Renderizable<?>> result = new ArrayList<>(); 
 				result.addAll(derivatedPoints);
 				result.addAll(pointsToLines(derivatedPoints, pointsPerPoint));
 				return result;

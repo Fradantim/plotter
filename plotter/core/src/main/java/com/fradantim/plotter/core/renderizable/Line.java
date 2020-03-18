@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 
-public class Line implements Renderizable{
+public class Line implements Renderizable<Line>{
 
 	private Vector2 pointA;
 	private Vector2 pointB;	
@@ -64,5 +64,10 @@ public class Line implements Renderizable{
 	
 	public String toString() {
 		return this.getClass().getSimpleName()+" A:"+pointA+", B:"+pointB;
+	}
+
+	@Override
+	public Line getCopy() {
+		return new Line(pointA.cpy(), pointB.cpy());
 	}
 }

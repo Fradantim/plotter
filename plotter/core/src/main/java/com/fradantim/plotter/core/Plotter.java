@@ -39,7 +39,7 @@ public class Plotter implements ApplicationListener {
 
 	private boolean fullScreen = true;
 	
-	private List<Renderizable> renderizables = new ArrayList<>();
+	private List<Renderizable<?>> renderizables = new ArrayList<>();
 	private List<Float> domainPoints;
 	
 	//PARA DEBUG
@@ -83,7 +83,7 @@ public class Plotter implements ApplicationListener {
 		
 		getInput();
 		
-	    for(Renderizable renderizable: renderizables) {
+	    for(Renderizable<?> renderizable: renderizables) {
 			renderizable.render(shapeRenderer);
 		}
 	}
@@ -246,17 +246,22 @@ public class Plotter implements ApplicationListener {
 	public void resume() {}
 	
 	
-	public synchronized void addRenderizable(Renderizable renderizable) {
-		List<Renderizable> nuevosRenderizables= new ArrayList<>();
+	public void emptyRenderizables() {
+		this.renderizables=new ArrayList<>();
+	}
+	
+	public synchronized void addRenderizable(Renderizable<?> renderizable) {
+		List<Renderizable<?>> nuevosRenderizables= new ArrayList<>();
 		nuevosRenderizables.addAll(this.renderizables);
+		renderizable.scale(1F*pixelsPerPoint);
 		renderizable.move(getCenter());
 		nuevosRenderizables.add(renderizable);
 		
 		this.renderizables=nuevosRenderizables;
 	}
 	
-	public synchronized void addRenderizables(Collection<? extends Renderizable> renderizables) {
-		List<Renderizable> nuevosRenderizables= new ArrayList<>();
+	public synchronized void addRenderizables(Collection<? extends Renderizable<?>> renderizables) {
+		List<Renderizable<?>> nuevosRenderizables= new ArrayList<>();
 		Vector2 center = getCenter();
 		renderizables.forEach(r -> {
 			r.scale(1F*pixelsPerPoint);

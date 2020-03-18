@@ -18,7 +18,7 @@ public class PVIEulerProcessor implements ProblemaValorInicialProcessor{
 	private Integer N;
 	
 	@Override
-	public List<Renderizable> getImage(List<String> vars, String function, Float t0, Float x0, Float T, Float h, Integer N) {
+	public List<Renderizable<?>> getImage(List<String> vars, String function, Float t0, Float x0, Float T, Float h, Integer N) {
 		if(h==null && N == null) {
 			throw new IllegalArgumentException("h and N where both null, at least on of those needs to have a value.");
 		}
@@ -37,7 +37,7 @@ public class PVIEulerProcessor implements ProblemaValorInicialProcessor{
 			this.h=new Float(Math.abs(Math.ceil((T-t0)/N)));
 		}
 		
-		List<Renderizable> result = new ArrayList<Renderizable>();
+		List<Renderizable<?>> result = new ArrayList<Renderizable<?>>();
 
 		List<Vector2> puntos= new ArrayList<>();
 			

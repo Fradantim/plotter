@@ -9,7 +9,10 @@ import java.util.concurrent.Executors;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 import com.fradantim.plotter.core.Plotter;
+import com.fradantim.plotter.core.renderizable.Line;
+import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 import com.fradantim.plotter.java.Threads.TaskGenerator;
 
 public class PlotterDesktop {
@@ -80,7 +83,7 @@ public class PlotterDesktop {
 			*/		
 			
 			//Euler PVI
-			/* */
+			/* 
 			String functionA = "p(t,2)";
 			String derivatedfunctionA = "2*t";
 			
@@ -101,9 +104,44 @@ public class PlotterDesktop {
 				service.submit(TaskGenerator.getEulerPVI(p, eulerVars, derivatedfunctionB, 0F, 0F, -4F, new Double(1F/(Math.pow(2, i))).floatValue(), null,colors[i]));
 				service.submit(TaskGenerator.getEulerPVI(p, eulerVars, derivatedfunctionB, 4F, -16F, 0F, new Double(1F/(Math.pow(2, i))).floatValue(), null,colors[i]));
 			}
+			*/
 			
 			
+			//Euler PVI again
+			/* */
+			String functionA = "p(t,2)";
+			String derivatedfunctionA = "2*t";
 			
+			int times=8;
+			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, functionA, domainByVar, PIXELS_PER_POINT, Colorizer.getColorFromGradient(times*2)));
+			List<String> eulerVars=Arrays.asList("t","x");
+			
+			for(int i=0; i< times-1; i++) {	
+				System.out.println((i+1)+" "+1F/(Math.pow(2, i)));
+				service.submit(TaskGenerator.getEulerPVI(p, eulerVars, derivatedfunctionA, -2F, 4F, 3F, new Double(1F/(Math.pow(2, i))).floatValue(), null,Colorizer.getColorFromGradient(i*2)));
+			}
+			
+			//some colors
+			/* 
+			Line line = new Line(new Vector2(-6F,-3F), new Vector2(-5F,-2F));
+			service.submit(TaskGenerator.getSimplePipeTaskTask(p, line));
+
+			int width=256;
+			for(int i=0; i<width; i++) {
+				Line newLine;
+				newLine = new Line(new Vector2(i*4F/PIXELS_PER_POINT,4), new Vector2(i*4F/PIXELS_PER_POINT,3));
+				newLine.setColor(Colorizer.getColorFromGradient(i));
+				service.submit(TaskGenerator.getSimplePipeTaskTask(p,newLine));
+				for(Integer mod : new Integer [] {2,4,8,16,32,64,128}) {
+					if(i%mod==0) {
+						int exp=new Double(Math.log(mod) / Math.log(2)).intValue();
+						newLine = new Line(new Vector2(i*4F/PIXELS_PER_POINT,4-exp), new Vector2(i*4F/PIXELS_PER_POINT,3-exp));
+						newLine.setColor(Colorizer.getColorFromGradient(i));
+						service.submit(TaskGenerator.getSimplePipeTaskTask(p,newLine));
+					}
+				}
+			}*/
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

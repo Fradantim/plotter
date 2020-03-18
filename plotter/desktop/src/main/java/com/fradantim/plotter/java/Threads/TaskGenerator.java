@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
 import com.fradantim.plotter.core.Plotter;
+import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 import com.fradantim.plotter.java.processor.FunctionProcessor;
 import com.fradantim.plotter.java.processor.PVIEulerProcessor;
@@ -13,6 +14,10 @@ import com.fradantim.plotter.java.processor.PVIEulerProcessor;
 import bsh.EvalError;
 
 public class TaskGenerator {
+	
+	public static Runnable getSimplePipeTaskTask(Plotter plotter, Renderizable<?> renderizable) {
+		return new SimplePipeTask(plotter, renderizable);
+	}
 
 	public static Runnable getSimpleFunctionTask(Plotter plotter, List<String> vars, String function, HashMap<String, List<Float>> domainByVar, Integer pixelsPerPoint) {
 		return new SimpleFunctionTask(plotter, vars, function, domainByVar, pixelsPerPoint, null, null);
@@ -36,6 +41,21 @@ public class TaskGenerator {
 	
 	public static Runnable getEulerPVI(Plotter plotter, List<String> vars, String derivatedFunction, Float t0, Float x0, Float T, Float h, Integer N, Color color) {
 		return new EulerPVITask(plotter, vars, derivatedFunction, t0, x0, T, h, N, color);
+	}
+}
+
+final class SimplePipeTask implements Runnable{
+	private Plotter plotter;
+	private Renderizable<?> renderizable;
+	
+	public SimplePipeTask(Plotter plotter, Renderizable<?> renderizable) {
+		this.plotter = plotter;
+		this.renderizable = renderizable;
+	}
+
+	@Override
+	public void run() {
+		plotter.addRenderizable(renderizable);
 	}
 }
 

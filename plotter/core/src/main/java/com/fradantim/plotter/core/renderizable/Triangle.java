@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 
-public class Triangle implements Renderizable{
+public class Triangle implements Renderizable<Triangle>{
 
 	private Vector2 pointA;
 	private Vector2 pointB;
@@ -66,5 +66,10 @@ public class Triangle implements Renderizable{
 	public void scale(Float scale) {
 		for(Vector2 point: Arrays.asList(pointA,pointB,pointC))
 			point.scl(scale);
+	}
+
+	@Override
+	public Triangle getCopy() {
+		return new Triangle(pointA.cpy(), pointB.cpy(), pointC.cpy());
 	}	
 }
