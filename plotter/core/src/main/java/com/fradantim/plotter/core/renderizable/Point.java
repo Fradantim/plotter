@@ -1,6 +1,7 @@
 package com.fradantim.plotter.core.renderizable;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.fradantim.plotter.core.Renderizable;
@@ -26,6 +27,12 @@ public class Point implements Renderizable<Point>{
         shapeRenderer.setColor(color);
        	shapeRenderer.point(point.x, point.y,0);
         shapeRenderer.end();
+	}
+	
+	@Override
+	public void render(Pixmap pixmap, Color color) {
+		pixmap.setColor(color);
+		pixmap.drawPixel((int) point.x, (int) point.y);
 	}
 
 	public Vector2 getPoint() {

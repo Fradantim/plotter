@@ -1,9 +1,11 @@
 package com.fradantim.plotter.core;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 
 public class FontUtils {
 	private static final int A_RES=1280*720;
@@ -21,10 +23,16 @@ public class FontUtils {
 		return (totalResolution-b)/m;
 	}
 	
+	
 	public static BitmapFont getOnScreenFont(int newFontSize) {
+		return getOnScreenFont(newFontSize, Colorizer.DEFAULT_COLOR);
+	}
+	
+	public static BitmapFont getOnScreenFont(int newFontSize, Color color) {
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Courier Prime.ttf"));
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		parameter.size = newFontSize;
+		parameter.color = color;
 		BitmapFont font = generator.generateFont(parameter); // font size 12
 		generator.dispose(); // don't forget to dispose to avoid memory leaks!
 		return font;

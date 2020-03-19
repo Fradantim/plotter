@@ -1,5 +1,6 @@
 package com.fradantim.plotter.core;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,40 +11,39 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.fradantim.plotter.core.renderizable.generator.AxisGenerator;
 
-public class Plotter implements ApplicationListener {
+public abstract class Plotter implements ApplicationListener {
 	
-	private static final int MIN_FONT_SIZE=12, SIGNIFICATIVE_DECIMALS=2;
+	public final static Color BACKGROUND_COLOR= new Color(0, 0, 0, 0);
+	
+	protected static final int MIN_FONT_SIZE=12, SIGNIFICATIVE_DECIMALS=2;
 
-	private static final float PIXEL_LINE_WIDTH=2F;
+	protected static final float PIXEL_LINE_WIDTH=2F;
 	
-	private SpriteBatch batch;
+	protected SpriteBatch batch;
 	
-	private ShapeRenderer shapeRenderer; //para las formas
+	protected ShapeRenderer shapeRenderer; //para las formas
 	
-	private OrthographicCamera camera;
+	protected OrthographicCamera camera;
 	
-	private BitmapFont font;
+	protected BitmapFont font;
 	
-	private Vector2 camPos = new Vector2(0,0);
+	protected Vector2 camPos = new Vector2(0,0);
 	
-	private Integer fontSize, pixelsPerPoint;
+	protected Integer fontSize, pixelsPerPoint;
 
-	private boolean fullScreen = true;
+	protected boolean fullScreen = true, firstRender=true;
 	
-	private List<Renderizable<?>> renderizables = new ArrayList<>();
-	private List<Float> domainPoints;
+	protected List<Float> domainPoints;
 	
 	//PARA DEBUG
-	private boolean debugOnScreen = true, listStadistics = true, drawGrid = true;
+	protected boolean debugOnScreen = true, listStadistics = true, drawGrid = true;
 	
 	@Override
 	public void create () {
@@ -60,33 +60,39 @@ public class Plotter implements ApplicationListener {
 		start();
 		switchScreenMode(fullScreen);
 		
-		renderizables.addAll(AxisGenerator.getAxis(getDisplayResolution(),pixelsPerPoint));
+		afterCreate();
 	}
+	
+	protected abstract void afterCreate();
 	
 	public void start() { }
 	 
 	@Override
 	public void render () {
-		fillDomainPoints();
-		fillFontSize();
-		camera.setToOrtho(false, getDisplayResolution().x , getDisplayResolution().y);
+		if(firstRender) {
+			firstRender=false;
+			fillDomainPoints();
+			fillFontSize();
+			camera.setToOrtho(false, getDisplayResolution().x , getDisplayResolution().y);
 
-		batch.setProjectionMatrix(camera.combined);
-		shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-		Gdx.gl.glClearColor(0, 0, 0, 0);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			batch.setProjectionMatrix(camera.combined);
+			shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+		}
+		
+		doRender();
 		
 		if(debugOnScreen) {
 			debugOnScreen();
 		}
 		
-		getInput();
-		
-	    for(Renderizable<?> renderizable: renderizables) {
-			renderizable.render(shapeRenderer);
-		}
+	    getInput();
 	}
+	
+	protected abstract void doRender();
+	
+	public abstract void addRenderizable(Renderizable<?> renderizable) ;
+	
+	public abstract void addRenderizables(Collection<? extends Renderizable<?>> renderizables);
 	
 	@Override
 	public void dispose () {
@@ -177,7 +183,7 @@ public class Plotter implements ApplicationListener {
 		return font;
 	}
 	
-	private Vector2 getDisplayResolution() {
+	protected Vector2 getDisplayResolution() {
 		return new Vector2(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 	}
 	
@@ -219,7 +225,6 @@ public class Plotter implements ApplicationListener {
 		List<Stadistic> stats = new ArrayList<>();
 		stats.add(new Stadistic("Gdx.gfx.FPS&deltaTime",String.valueOf(Gdx.graphics.getFramesPerSecond())));
 		stats.add(new Stadistic(this,"FontSize",String.valueOf(fontSize)));
-		stats.add(new Stadistic(this,"#Renderizables_",renderizables.size()));
 		stats.add(new Stadistic(this,"#PixelsPerPoint",pixelsPerPoint));
 		stats.add(new Stadistic(this,"DisplayPixRes (W,H)",getDisplayResolution()));
 		stats.add(new Stadistic(this,"CamPos____ (W,H)",getCamPos()+">"+getCamPos()));
@@ -245,34 +250,6 @@ public class Plotter implements ApplicationListener {
 
 	public void resume() {}
 	
-	
-	public void emptyRenderizables() {
-		this.renderizables=new ArrayList<>();
-	}
-	
-	public synchronized void addRenderizable(Renderizable<?> renderizable) {
-		List<Renderizable<?>> nuevosRenderizables= new ArrayList<>();
-		nuevosRenderizables.addAll(this.renderizables);
-		renderizable.scale(1F*pixelsPerPoint);
-		renderizable.move(getCenter());
-		nuevosRenderizables.add(renderizable);
-		
-		this.renderizables=nuevosRenderizables;
-	}
-	
-	public synchronized void addRenderizables(Collection<? extends Renderizable<?>> renderizables) {
-		List<Renderizable<?>> nuevosRenderizables= new ArrayList<>();
-		Vector2 center = getCenter();
-		renderizables.forEach(r -> {
-			r.scale(1F*pixelsPerPoint);
-			r.move(center);
-		});
-		nuevosRenderizables.addAll(this.renderizables);
-		nuevosRenderizables.addAll(renderizables);
-		
-		this.renderizables=nuevosRenderizables;
-	}
-	
 	public List<Float> getDomainPoints(){
 		return domainPoints;
 	}
@@ -281,7 +258,7 @@ public class Plotter implements ApplicationListener {
 		if(domainPoints== null) {
 			List<Float> result = new ArrayList<>();
 			
-			for(int i=0; i< (int)getDisplayResolution().x/pixelsPerPoint; i++) {
+			for(int i=0; i< (int)getDisplayResolution().x*.7/pixelsPerPoint; i++) {
 				for(float d=0; d<1;d+=1D/pixelsPerPoint) {
 					result.add(i+d);
 					result.add(-i-d);

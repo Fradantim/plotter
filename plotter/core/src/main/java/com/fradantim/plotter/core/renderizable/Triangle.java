@@ -3,6 +3,7 @@ package com.fradantim.plotter.core.renderizable;
 import java.util.Arrays;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.fradantim.plotter.core.Renderizable;
@@ -32,6 +33,12 @@ public class Triangle implements Renderizable<Triangle>{
         shapeRenderer.setColor(color);
        	shapeRenderer.triangle(pointA.x, pointA.y, pointB.x, pointB.y, pointC.x, pointC.y);
         shapeRenderer.end();
+	}
+	
+	@Override
+	public void render(Pixmap pixmap, Color color) {
+		pixmap.setColor(color);
+		pixmap.fillTriangle((int) pointA.x, (int) pointA.y, (int) pointB.x, (int) pointB.y, (int) pointC.x, (int) pointC.y);
 	}
 
 	public Vector2 getPointA() {

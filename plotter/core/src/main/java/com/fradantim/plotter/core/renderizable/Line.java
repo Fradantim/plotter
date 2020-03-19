@@ -3,6 +3,7 @@ package com.fradantim.plotter.core.renderizable;
 import java.util.Arrays;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.fradantim.plotter.core.Renderizable;
@@ -30,6 +31,12 @@ public class Line implements Renderizable<Line>{
         shapeRenderer.setColor(color);
        	shapeRenderer.line(pointA, pointB);
         shapeRenderer.end();
+	}
+	
+	@Override
+	public void render(Pixmap pixmap, Color color) {
+		pixmap.setColor(color);
+		pixmap.drawLine((int) pointA.x, (int) pointA.y, (int) pointB.x, (int) pointB.y);
 	}
 
 	public Vector2 getPointA() {

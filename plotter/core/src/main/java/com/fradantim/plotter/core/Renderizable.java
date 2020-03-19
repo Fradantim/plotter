@@ -1,6 +1,7 @@
 package com.fradantim.plotter.core;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public interface Renderizable<T> extends Movable, Scalable, Copyable<T>{
@@ -14,4 +15,10 @@ public interface Renderizable<T> extends Movable, Scalable, Copyable<T>{
 	}
 	
 	public void render(ShapeRenderer shapeRenderer, Color color);
+	
+	public default void render(Pixmap pixmap) {
+		render(pixmap, getColor());
+	}	
+	
+	public void render(Pixmap pixmap, Color color);
 }
