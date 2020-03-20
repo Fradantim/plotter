@@ -17,6 +17,8 @@ public class PVIEulerProcessor implements ProblemaValorInicialProcessor{
 	private Float t0, x0, T, h;
 	private Integer N;
 	
+	private Map<Float, Float> memory;
+	
 	@Override
 	public List<Renderizable<?>> getImage(List<String> vars, String function, Float t0, Float x0, Float T, Float h, Integer N) {
 		if(h==null && N == null) {
@@ -37,6 +39,8 @@ public class PVIEulerProcessor implements ProblemaValorInicialProcessor{
 			this.h=new Float(Math.abs(Math.ceil((T-t0)/N)));
 		}
 		
+		memory= new HashMap<>();
+		memory.put(t0, x0);
 		List<Renderizable<?>> result = new ArrayList<Renderizable<?>>();
 
 		List<Vector2> puntos= new ArrayList<>();
@@ -58,7 +62,13 @@ public class PVIEulerProcessor implements ProblemaValorInicialProcessor{
 			if(t.equals(t0)) {
 				return x0;
 			}else {
-				Float previousValue=getValue(t-(h*(t0<T?1:-1)));
+				Float previousT=t-(h*(t0<T?1:-1));
+				
+				Float previousValue=memory.get(previousT);
+				if(previousValue==null) {
+					previousValue=getValue(t-(h*(t0<T?1:-1)));
+					memory.put(previousT, previousValue);
+				}
 				
 				Map<String, Float> elementByVar= new HashMap<String, Float>();
 				elementByVar.put(vars.get(0), t-h*(t0<T?1:-1));
