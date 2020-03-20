@@ -13,7 +13,7 @@ public class AxisGenerator {
 	
 	public final static Color AXIS_COLOR=Color.WHITE;
 	
-	private final static Integer RULER_SIZE=5;
+	private final static Integer RULER_SIZE=20;
 
 	public static List<Renderizable<?>> getAxis(Vector2 ScreenSize, int pixelsPerPoint){
 		return getAxis((int) ScreenSize.x, (int) ScreenSize.y, pixelsPerPoint, AXIS_COLOR);

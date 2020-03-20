@@ -10,6 +10,7 @@ import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 import com.fradantim.plotter.java.processor.FunctionProcessor;
 import com.fradantim.plotter.java.processor.PVIEulerProcessor;
+import com.fradantim.plotter.java.processor.PVIImprovedEulerProcessor;
 
 import bsh.EvalError;
 
@@ -41,6 +42,14 @@ public class TaskGenerator {
 	
 	public static Runnable getEulerPVI(Plotter plotter, List<String> vars, String derivatedFunction, Float t0, Float x0, Float T, Float h, Integer N, Color color) {
 		return new EulerPVITask(plotter, vars, derivatedFunction, t0, x0, T, h, N, color);
+	}
+	
+	public static Runnable getImprovedEulerPVI(Plotter plotter, List<String> vars, String derivatedFunction, Float t0, Float x0, Float T, Float h, Integer N) {
+		return new ImprovedEulerPVITask(plotter, vars, derivatedFunction, t0, x0, T, h, N, null);
+	}
+	
+	public static Runnable getImprovedEulerPVI(Plotter plotter, List<String> vars, String derivatedFunction, Float t0, Float x0, Float T, Float h, Integer N, Color color) {
+		return new ImprovedEulerPVITask(plotter, vars, derivatedFunction, t0, x0, T, h, N, color);
 	}
 }
 
@@ -112,5 +121,32 @@ final class EulerPVITask implements Runnable{
 	@Override
 	public void run() {
 		plotter.addRenderizables(Colorizer.colorize(new PVIEulerProcessor().getImage(vars, derivatedFunction, t0, x0, T, h, N),color));
+	}
+}
+
+final class ImprovedEulerPVITask implements Runnable{
+	private Plotter plotter;
+	private List<String> vars;
+	private String derivatedFunction;
+	@SuppressWarnings("unused")
+	private Float t0, x0, T, h;
+	private Integer N;
+	private Color color;
+	
+	public ImprovedEulerPVITask(Plotter plotter, List<String> vars, String derivatedFunction, Float t0, Float x0, Float T, Float h, Integer N, Color color) {
+		this.plotter=plotter;
+		this.vars = vars;
+		this.derivatedFunction = derivatedFunction;
+		this.t0 = t0;
+		this.x0 = x0;
+		this.T = T;
+		this.h = h;
+		this.N = N;
+		this.color = color!=null ? color : Colorizer.DEFAULT_COLOR;
+	}
+
+	@Override
+	public void run() {
+		plotter.addRenderizables(Colorizer.colorize(new PVIImprovedEulerProcessor().getImage(vars, derivatedFunction, t0, x0, T, h, N),color));
 	}
 }

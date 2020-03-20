@@ -6,17 +6,22 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.zip.Deflater;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.BufferUtils;
+import com.badlogic.gdx.utils.ScreenUtils;
 
 public abstract class Plotter implements ApplicationListener {
 	
@@ -127,6 +132,10 @@ public abstract class Plotter implements ApplicationListener {
 		if(isKeyJustPressed(Keys.F4)) {
 			fullScreen = (fullScreen) ? false : true;
 			switchScreenMode(fullScreen);
+		}
+		
+		if(isKeyJustPressed(Keys.F12)) {
+			takeScreenShot();
 		}
 		
 		if(isKeyJustPressed(Keys.NUM_0)) {
@@ -286,5 +295,19 @@ public abstract class Plotter implements ApplicationListener {
 	
 	public Float getHeigth() {
 		return getDisplayResolution().y/2/pixelsPerPoint;
+	}
+	
+	public void takeScreenShot() {
+		byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
+
+		// this loop makes sure the whole screenshot is opaque and looks exactly like what the user is seeing
+		for(int i = 4; i < pixels.length; i += 4) {
+		    pixels[i - 1] = (byte) 255;
+		}
+
+		Pixmap pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), Pixmap.Format.RGBA8888);
+		BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
+		PixmapIO.writePNG(Gdx.files.external("mypixmap.png"), pixmap);
+		pixmap.dispose();
 	}
 }
