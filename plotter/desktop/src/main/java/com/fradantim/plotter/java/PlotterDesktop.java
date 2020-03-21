@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.fradantim.plotter.core.AwarePlotter;
 import com.fradantim.plotter.core.Plotter;
 import com.fradantim.plotter.core.Threads.TaskGenerator;
-import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 
 public class PlotterDesktop {
 	
@@ -74,8 +73,8 @@ public class PlotterDesktop {
 			
 			//derivacion
 			/* 	*/
-			Color[] colors = {Color.BROWN,Color.MAGENTA,Color.RED,Color.ORANGE,Color.GOLD,Color.YELLOW,Color.GREEN};
-			String function = "p(t,"+(colors.length+2)+")/32";
+			Color[] colors = {Color.BROWN,Color.MAGENTA,Color.RED,Color.ORANGE,Color.GOLD,Color.YELLOW,Color.GREEN,Color.BLUE};
+			String function = "p(t,"+(colors.length-1)+")/5000";
 			
 			for(int i=0; i< colors.length; i++) {
 				service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, function, domainByVar, PIXELS_PER_POINT, i, colors[i]));

@@ -3,6 +3,7 @@ package com.fradantim.plotter.core;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 
 public interface Renderizable extends Movable, Scalable, Copyable<Renderizable>{
 	
@@ -21,4 +22,7 @@ public interface Renderizable extends Movable, Scalable, Copyable<Renderizable>{
 	}	
 	
 	public void render(Pixmap pixmap, Color color);
+	
+	
+	public boolean collidesWith (Rectangle rect);
 }

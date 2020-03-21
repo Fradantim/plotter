@@ -5,6 +5,7 @@ import java.util.Arrays;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.renderizable.generator.Colorizer;
@@ -76,5 +77,10 @@ public class Line implements Renderizable{
 	@Override
 	public Line getCopy() {
 		return new Line(pointA.cpy(), pointB.cpy());
+	}
+
+	@Override
+	public boolean collidesWith(Rectangle rect) {
+		return rect.contains(pointA)||rect.contains(pointB);
 	}
 }

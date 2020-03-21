@@ -48,7 +48,6 @@ public class ObliviousPlotter extends Plotter {
 		super.dispose();
 	}
 
-	@Override
 	public synchronized void addRenderizable(Renderizable renderizable) {
 		renderizable.render(shapeRenderer);
 		

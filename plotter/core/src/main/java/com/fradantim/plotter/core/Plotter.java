@@ -96,8 +96,6 @@ public abstract class Plotter implements ApplicationListener {
 	
 	protected abstract void doRender();
 	
-	public abstract void addRenderizable(Renderizable renderizable) ;
-	
 	public abstract void addRenderizables(Collection<? extends Renderizable> renderizables);
 	
 	public abstract void addRenderizables(RenderizableComponent component);

@@ -1,5 +1,6 @@
 package com.fradantim.plotter.core.Threads;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -71,7 +72,7 @@ final class SimplePipeTask implements Runnable{
 
 	@Override
 	public void run() {
-		plotter.addRenderizable(renderizable);
+		plotter.addRenderizables(Arrays.asList(renderizable));
 	}
 }
 

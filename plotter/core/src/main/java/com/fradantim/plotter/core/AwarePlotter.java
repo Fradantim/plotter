@@ -5,18 +5,19 @@ import java.util.Collection;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.Rectangle;
 import com.fradantim.plotter.core.renderizable.generator.AxisGenerator;
 
 /** An implementation of Plotter which keeps it's Renderizables in memory and refreshes the screen */
 public class AwarePlotter extends Plotter {
 	
 	private List<Renderizable> renderizables = new ArrayList<>();
-	
+	private Rectangle rectangleOverScreen;
 	@Override
 	protected void afterCreate() {
 		renderizables.addAll(AxisGenerator.getAxis(getDisplayResolution(),pixelsPerPoint));
+		rectangleOverScreen= new Rectangle(0, 0, (int) getDisplayResolution().x, (int)  getDisplayResolution().y);
 	}
 	 
 	protected void doRender() {
@@ -24,12 +25,15 @@ public class AwarePlotter extends Plotter {
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
+		
+		
 		///ugly iteration to avoid concurrency errors
 		for(int i=0; i<renderizables.size(); i++) {
 			if(renderizables.get(i)!=null) {
 				//yes, it can be null in this context
 				renderizables.get(i).render(shapeRenderer);
 			}
+		
 		}
 	}
 	
@@ -46,18 +50,20 @@ public class AwarePlotter extends Plotter {
 		this.renderizables=new ArrayList<>();
 	}
 	
-	public synchronized void addRenderizable(Renderizable renderizable) {
-		renderizable.scale(1F*pixelsPerPoint);
-		renderizable.move(getCenter());
+	private synchronized void addRenderizable(Renderizable renderizable) {
 		renderizables.add(renderizable);
 	}
 	
 	public void addRenderizables(Collection<? extends Renderizable> renderizables) {
 		renderizables.forEach(r -> { 
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) { e.printStackTrace();}
-			addRenderizable(r);
+			r.scale(1F*pixelsPerPoint);
+			r.move(getCenter());
+			if(r.collidesWith(rectangleOverScreen)) {
+				try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) { e.printStackTrace();}
+				addRenderizable(r);
+			}
 			});
 
 	}
