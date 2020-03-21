@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.zip.Deflater;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
@@ -95,9 +94,9 @@ public abstract class Plotter implements ApplicationListener {
 	
 	protected abstract void doRender();
 	
-	public abstract void addRenderizable(Renderizable<?> renderizable) ;
+	public abstract void addRenderizable(Renderizable renderizable) ;
 	
-	public abstract void addRenderizables(Collection<? extends Renderizable<?>> renderizables);
+	public abstract void addRenderizables(Collection<? extends Renderizable> renderizables);
 	
 	@Override
 	public void dispose () {
@@ -267,7 +266,7 @@ public abstract class Plotter implements ApplicationListener {
 		if(domainPoints== null) {
 			List<Float> result = new ArrayList<>();
 			
-			for(int i=0; i< (int)getDisplayResolution().x*.7/pixelsPerPoint; i++) {
+			for(int i=0; i< (int)getDisplayResolution().x*.6/pixelsPerPoint; i++) {
 				for(float d=0; d<1;d+=1D/pixelsPerPoint) {
 					result.add(i+d);
 					result.add(-i-d);

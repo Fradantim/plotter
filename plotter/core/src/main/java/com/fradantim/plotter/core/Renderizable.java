@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-public interface Renderizable<T> extends Movable, Scalable, Copyable<T>{
+public interface Renderizable extends Movable, Scalable, Copyable<Renderizable>{
 	
 	public Color getColor();
 	

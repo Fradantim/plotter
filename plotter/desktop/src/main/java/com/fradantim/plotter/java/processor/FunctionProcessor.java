@@ -1,6 +1,5 @@
 package com.fradantim.plotter.java.processor;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,15 +18,19 @@ public class FunctionProcessor {
 	
 	public enum RenderType{ POINT, LINE, BOTH; }
 	
-	public static Interpreter getInterpreter() throws FileNotFoundException, IOException, EvalError {
-		Interpreter interpreter = new Interpreter();
-		interpreter.source("advancedFunctions.bsh");
-		return interpreter;
+	public static Interpreter getInterpreter() {
+		try {
+			Interpreter interpreter = new Interpreter();
+			interpreter.source("advancedFunctions.bsh");
+			return interpreter;
+		} catch (IOException | EvalError e) {
+			throw new IllegalArgumentException(e);
+		}
 	}
 	
 	/** Lines so that distant point which should be connected are. */
-	public static List<? extends Renderizable<?>> pointsToLines(List<Point> points, Integer pointsPerPoints){
-		List<Renderizable<?>> lines = new ArrayList<>();
+	public static List<? extends Renderizable> pointsToLines(List<Point> points, Integer pointsPerPoints){
+		List<Renderizable> lines = new ArrayList<>();
 		
 		for(int i=0; i<points.size()-1;i++) {
 			Point pointA = points.get(i);
@@ -48,43 +51,47 @@ public class FunctionProcessor {
 		return lines;
 	}
 	
-	public static Double getImageAtElement(List<String> vars, String function, Map<String,Float> elementByVar) throws EvalError, FileNotFoundException, IOException{
+	public static Double getImageAtElement(List<String> vars, String function, Map<String,Float> elementByVar) {
 		Interpreter interpreter= getInterpreter();
 		return getImageAtElement(interpreter, vars, function, elementByVar);
 	}
 	
-	private static Double getImageAtElement(Interpreter interpreter, List<String> vars, String function, Map<String,Float> elementByVar) throws EvalError{
+	private static Double getImageAtElement(Interpreter interpreter, List<String> vars, String function, Map<String,Float> elementByVar) {
 		if(vars.size()!=elementByVar.size()){
 			throw new IllegalAccessError("Variable names and it's values must be same size and same order.");
 		}
 		
-		for(String var : vars) {
-			Float element = elementByVar.get(var);
-			interpreter.set(var, element);
+		try {
+			for(String var : vars) {
+				Float element = elementByVar.get(var);
+				interpreter.set(var, element);
+			}
+			
+			interpreter.eval("resultado = "+function);
+			
+			Object resObj = interpreter.get("resultado");
+			if(resObj !=null)
+				return new Double(resObj.toString());
+			return null;
+		} catch (EvalError e) {
+			throw new RuntimeException(e);
 		}
-		
-		interpreter.eval("resultado = "+function);
-		
-		Object resObj = interpreter.get("resultado");
-		if(resObj !=null)
-			return new Double(resObj.toString());
-		return null;
 	}
 	
-	public static List<? extends Renderizable<?>> getImage(List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint) throws EvalError, FileNotFoundException, IOException{
+	public static List<? extends Renderizable> getImage(List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint) {
 		return getImage(vars, function, domainByVar, pointsPerPoint, 0);
 	}
 	
-	public static List<? extends Renderizable<?>> getImage(List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times) throws EvalError, FileNotFoundException, IOException{
+	public static List<? extends Renderizable> getImage(List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times) {
 		return getImage(vars, function, domainByVar, pointsPerPoint, times, RenderType.LINE);
 	}
 	
-	public static List<? extends Renderizable<?>> getImage(List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times, RenderType renderType) throws EvalError, FileNotFoundException, IOException{
+	public static List<? extends Renderizable> getImage(List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times, RenderType renderType) {
 		Interpreter interpreter= getInterpreter();
 		return getImage(interpreter, vars, function, domainByVar, pointsPerPoint, times, renderType);
 	}
 	
-	private static List<? extends Renderizable<?>> getImage(Interpreter interpreter, List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times, RenderType renderType) throws EvalError {
+	private static List<? extends Renderizable> getImage(Interpreter interpreter, List<String> vars, String function, Map<String,List<Float>> domainByVar, Integer pointsPerPoint, Integer times, RenderType renderType) {
 		List<Point> derivatedPoints = new ArrayList<>();
 		
 		if(vars.size()!=domainByVar.size()){
@@ -105,7 +112,6 @@ public class FunctionProcessor {
 			if(value !=null) {
 				derivatedPoints.add(new Point(new Vector2(element,value.floatValue())));
 			}
-			
 		}
 		
 		switch(renderType) {
@@ -116,7 +122,7 @@ public class FunctionProcessor {
 				return pointsToLines(derivatedPoints, pointsPerPoint);
 			}
 			case BOTH: {
-				List<Renderizable<?>> result = new ArrayList<>(); 
+				List<Renderizable> result = new ArrayList<>(); 
 				result.addAll(derivatedPoints);
 				result.addAll(pointsToLines(derivatedPoints, pointsPerPoint));
 				return result;
@@ -127,7 +133,7 @@ public class FunctionProcessor {
 	}
 	
 	//TODO try multithreading?
-	private static Double getImageAtElement(Interpreter interpreter, List<String> vars, String function, Map<String,Float> elementByVar, Integer pointsPerPoint, Integer derivationTimes) throws EvalError {
+	private static Double getImageAtElement(Interpreter interpreter, List<String> vars, String function, Map<String,Float> elementByVar, Integer pointsPerPoint, Integer derivationTimes) {
 		if(derivationTimes==0)
 			return getImageAtElement(interpreter, vars, function, elementByVar);
 		else {

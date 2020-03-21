@@ -1,6 +1,5 @@
 package com.fradantim.plotter.java;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +8,7 @@ import java.util.concurrent.Executors;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.graphics.Color;
 import com.fradantim.plotter.core.AwarePlotter;
 import com.fradantim.plotter.core.Plotter;
 import com.fradantim.plotter.core.renderizable.generator.Colorizer;
@@ -16,7 +16,7 @@ import com.fradantim.plotter.java.Threads.TaskGenerator;
 
 public class PlotterDesktop {
 	
-	private static final Integer PIXELS_PER_POINT=250;
+	private static final Integer PIXELS_PER_POINT=200;
 	
 	public static void main (String[] args) {
 		Plotter p = new AwarePlotter();
@@ -73,14 +73,14 @@ public class PlotterDesktop {
 			*/
 			
 			//derivacion
-			/*
+			/* 	*/
 			Color[] colors = {Color.BROWN,Color.MAGENTA,Color.RED,Color.ORANGE,Color.GOLD,Color.YELLOW,Color.GREEN,Color.BLUE};
 			String function = "p(t,"+(colors.length-1)+")/32";
 			
 			for(int i=0; i< colors.length; i++) {
 				service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, function, domainByVar, PIXELS_PER_POINT, i, colors[i]));
 			}
-			*/		
+			
 			
 			//Euler PVI
 			/* 
@@ -141,19 +141,19 @@ public class PlotterDesktop {
 			}*/
 		
 			//Euler PVI vs Improved 
-			/* */
-			//String functionA = "p(p(p(t,0.5),2),2)";
-			String derivatedfunctionA = "2*t";
+			/*  
+			String functionA = "p(t,4)";
+			String derivatedfunctionA = "4*p(t,3)";
 			
-			int times=3;
-			//service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, functionA, domainByVar, PIXELS_PER_POINT, Colorizer.getColorFromGradient(-1)));
+			int times=2;
+			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, functionA, domainByVar, PIXELS_PER_POINT, Colorizer.getColorFromGradient(-1)));
 			List<String> eulerVars=Arrays.asList("t","x");
 			
 			for(int i=0; i< times; i++) {
 				service.submit(TaskGenerator.getEulerPVI(p, eulerVars, derivatedfunctionA, 0F, 0F, 4F, new Double(1F/(Math.pow(2, i))).floatValue(), null,Colorizer.getColorFromGradient((times-i)*4)));
 				service.submit(TaskGenerator.getImprovedEulerPVI(p, eulerVars, derivatedfunctionA, 0F, 0F, -4F, new Double(1F/(Math.pow(2, i))).floatValue(), null,Colorizer.getColorFromGradient((times-i)*4)));
 			}
-			
+			*/
 			
 		} catch (Exception e) {
 			e.printStackTrace();

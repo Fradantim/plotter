@@ -1,7 +1,5 @@
 package com.fradantim.plotter.java.processor;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,8 +8,6 @@ import java.util.Map;
 import com.badlogic.gdx.math.Vector2;
 import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.renderizable.Line;
-
-import bsh.EvalError;
 
 
 /**
@@ -37,7 +33,7 @@ public class PVIImprovedEulerProcessor implements ProblemaValorInicialProcessor{
 	private Map<Float, Float> memory;
 	
 	@Override
-	public List<Renderizable<?>> getImage(List<String> vars, String function, Float t0, Float x0, Float T, Float h, Integer N) {
+	public List<Renderizable> getImage(List<String> vars, String function, Float t0, Float x0, Float T, Float h, Integer N) {
 		if(h==null && N == null) {
 			throw new IllegalArgumentException("h and N where both null, at least on of those needs to have a value.");
 		}
@@ -58,7 +54,7 @@ public class PVIImprovedEulerProcessor implements ProblemaValorInicialProcessor{
 		
 		memory= new HashMap<>();
 		memory.put(t0, x0);
-		List<Renderizable<?>> result = new ArrayList<Renderizable<?>>();
+		List<Renderizable> result = new ArrayList<Renderizable>();
 
 		List<Vector2> puntos= new ArrayList<>();
 	
@@ -75,42 +71,37 @@ public class PVIImprovedEulerProcessor implements ProblemaValorInicialProcessor{
 	}
 	
 	public Float getValue(Float t) {
-		try {
-			if(t.equals(t0)) {
-				return x0;
-			}else {
-				Float previousT=t-(h*(t0<T?1:-1));
-				
-				Float previousValue=memory.get(previousT);
-				if(previousValue==null) {
-					previousValue=getValue(previousT);
-					memory.put(previousT, previousValue);
-				}
-				
-				Map<String, Float> elementByVar= new HashMap<String, Float>();
-				elementByVar.put(vars.get(0), t-h*(t0<T?1:-1));
-				elementByVar.put(vars.get(1), previousValue.floatValue());
-				
-				Float newValue=previousValue+h*process(vars, function, elementByVar).floatValue();
-				
-				Map<String, Float> nextElementByVar= new HashMap<String, Float>();
-				nextElementByVar.put(vars.get(0), t);
-				nextElementByVar.put(vars.get(1), newValue);
-				
-				Float improvedNewValue=previousValue+(h/2)
-						*new Double(process(vars, function, elementByVar)
-								+ process(vars, function, nextElementByVar)).floatValue();
-				
-				memory.put(t, improvedNewValue);
-				return improvedNewValue;
+		if(t.equals(t0)) {
+			return x0;
+		} else {
+			Float previousT=t-(h*(t0<T?1:-1));
+			
+			Float previousValue=memory.get(previousT);
+			if(previousValue==null) {
+				previousValue=getValue(previousT);
+				memory.put(previousT, previousValue);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+			
+			Map<String, Float> elementByVar= new HashMap<String, Float>();
+			elementByVar.put(vars.get(0), t-h*(t0<T?1:-1));
+			elementByVar.put(vars.get(1), previousValue.floatValue());
+			
+			Float newValue=previousValue+h*process(vars, function, elementByVar).floatValue();
+			
+			Map<String, Float> nextElementByVar= new HashMap<String, Float>();
+			nextElementByVar.put(vars.get(0), t);
+			nextElementByVar.put(vars.get(1), newValue);
+			
+			Float improvedNewValue=previousValue+(h/2)
+					*new Double(process(vars, function, elementByVar)
+							+ process(vars, function, nextElementByVar)).floatValue();
+			
+			memory.put(t, improvedNewValue);
+			return improvedNewValue;
 		}
-		return null;
 	}
 	
-	private Double process(List<String> vars, String function, Map<String, Float> elementByVar) throws FileNotFoundException, EvalError, IOException {
+	private Double process(List<String> vars, String function, Map<String, Float> elementByVar) {
 		return FunctionProcessor.getImageAtElement(vars, function, elementByVar)*(t0<T?1:-1);
 	}
 }

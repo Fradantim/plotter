@@ -1,6 +1,5 @@
 package com.fradantim.plotter.java.Threads;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,11 +11,9 @@ import com.fradantim.plotter.java.processor.FunctionProcessor;
 import com.fradantim.plotter.java.processor.PVIEulerProcessor;
 import com.fradantim.plotter.java.processor.PVIImprovedEulerProcessor;
 
-import bsh.EvalError;
-
 public class TaskGenerator {
 	
-	public static Runnable getSimplePipeTaskTask(Plotter plotter, Renderizable<?> renderizable) {
+	public static Runnable getSimplePipeTaskTask(Plotter plotter, Renderizable renderizable) {
 		return new SimplePipeTask(plotter, renderizable);
 	}
 
@@ -55,9 +52,9 @@ public class TaskGenerator {
 
 final class SimplePipeTask implements Runnable{
 	private Plotter plotter;
-	private Renderizable<?> renderizable;
+	private Renderizable renderizable;
 	
-	public SimplePipeTask(Plotter plotter, Renderizable<?> renderizable) {
+	public SimplePipeTask(Plotter plotter, Renderizable renderizable) {
 		this.plotter = plotter;
 		this.renderizable = renderizable;
 	}
@@ -89,11 +86,7 @@ final class SimpleFunctionTask implements Runnable{
 
 	@Override
 	public void run() {
-		try {
-			plotter.addRenderizables(Colorizer.colorize(FunctionProcessor.getImage(vars, function, domainByVar, pixelsPerPoint,derivationTimes), color));
-		} catch (EvalError | IOException e) {
-			e.printStackTrace();
-		}
+		plotter.addRenderizables(Colorizer.colorize(FunctionProcessor.getImage(vars, function, domainByVar, pixelsPerPoint,derivationTimes), color));
 	}
 }
 

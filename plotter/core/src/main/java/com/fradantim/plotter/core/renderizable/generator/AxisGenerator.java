@@ -15,16 +15,16 @@ public class AxisGenerator {
 	
 	private final static Integer RULER_SIZE=20;
 
-	public static List<Renderizable<?>> getAxis(Vector2 ScreenSize, int pixelsPerPoint){
+	public static List<Renderizable> getAxis(Vector2 ScreenSize, int pixelsPerPoint){
 		return getAxis((int) ScreenSize.x, (int) ScreenSize.y, pixelsPerPoint, AXIS_COLOR);
 	}
 	
-	public static List<Renderizable<?>> getAxis(Vector2 ScreenSize, int pixelsPerPoint, Color color){
+	public static List<Renderizable> getAxis(Vector2 ScreenSize, int pixelsPerPoint, Color color){
 		return getAxis((int) ScreenSize.x, (int) ScreenSize.y, pixelsPerPoint, color);
 	}
 	
-	public static List<Renderizable<?>> getAxis(int xScreenSize, int yScreenSize, int pixelsPerPoint, Color color){
-		List<Renderizable<?>> result = new ArrayList<Renderizable<?>>();
+	public static List<Renderizable> getAxis(int xScreenSize, int yScreenSize, int pixelsPerPoint, Color color){
+		List<Renderizable> result = new ArrayList<Renderizable>();
 		
 		//horizontal line 
 		result.add(new Line(new Vector2(0,yScreenSize/2), new Vector2(xScreenSize,yScreenSize/2), color));
@@ -55,9 +55,6 @@ public class AxisGenerator {
 		result.add(TriangleGenerator.simpleTriangle(new Vector2(xScreenSize,yScreenSize/2),Direction.RIGHT,xScreenSize/(pixelsPerPoint*2),color));
 		
 		return result;
-	}
-	
-	
-	
+	}	
 }
  

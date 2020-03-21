@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 
-public class Point implements Renderizable<Point>{
+public class Point implements Renderizable{
 
 	private Vector2 point;
 	private Color color;

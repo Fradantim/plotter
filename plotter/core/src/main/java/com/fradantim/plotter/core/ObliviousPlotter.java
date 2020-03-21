@@ -5,13 +5,13 @@ import java.util.Collection;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.fradantim.plotter.core.renderizable.generator.AxisGenerator;
 
 /** An implementation of Plotter which doesn't keeps it's Renderizables in memory and does not refreshes the screen,
- *  once a Renderizable is added it wont be removed. */
+ *  once a Renderizable is added it wont be removed. <br>
+ *  <b>NOT YET READY FOR USE</b><br>
+ *  (and may be never done)*/
 public class ObliviousPlotter extends Plotter {
 	
 	private boolean firstTime=true;
@@ -48,13 +48,13 @@ public class ObliviousPlotter extends Plotter {
 		super.dispose();
 	}
 
-	public synchronized void addRenderizable(Renderizable<?> renderizable) {
+	public synchronized void addRenderizable(Renderizable renderizable) {
 		renderizable.render(shapeRenderer);
 		
 		Gdx.graphics.requestRendering();
 	}
 	
-	public synchronized void addRenderizables(Collection<? extends Renderizable<?>> renderizables) {
+	public synchronized void addRenderizables(Collection<? extends Renderizable> renderizables) {
 		renderizables.forEach(r -> addRenderizable(r));
 		System.out.println("IN"+(i++));
 		Gdx.graphics.requestRendering();

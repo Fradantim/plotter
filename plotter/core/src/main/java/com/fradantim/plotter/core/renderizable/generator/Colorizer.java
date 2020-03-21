@@ -13,13 +13,13 @@ public class Colorizer {
 	
 	public static final Color DEFAULT_COLOR= Color.WHITE;
 
-	public static Renderizable<?> colorize(Renderizable<?> renderizable, Color color) {
+	public static Renderizable colorize(Renderizable renderizable, Color color) {
 		renderizable.setColor(color);
 		return renderizable;
 	}
 	
-	public static Collection<? extends Renderizable<?>> colorize(Collection<? extends Renderizable<?>> renderizables, Color color) {
-		for(Renderizable<?> renderizable: renderizables)
+	public static Collection<? extends Renderizable> colorize(Collection<? extends Renderizable> renderizables, Color color) {
+		for(Renderizable renderizable: renderizables)
 			colorize(renderizable, color);
 		return renderizables;
 	}
