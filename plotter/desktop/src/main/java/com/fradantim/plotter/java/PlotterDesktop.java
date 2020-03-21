@@ -73,14 +73,14 @@ public class PlotterDesktop {
 			*/
 			
 			//derivacion
-			/* 	
-			Color[] colors = {Color.BROWN,Color.MAGENTA,Color.RED,Color.ORANGE,Color.GOLD,Color.YELLOW,Color.GREEN,Color.BLUE};
-			String function = "p(t,"+(colors.length-1)+")/32";
+			/* 	*/
+			Color[] colors = {Color.BROWN,Color.MAGENTA,Color.RED,Color.ORANGE,Color.GOLD,Color.YELLOW,Color.GREEN};
+			String function = "p(t,"+(colors.length+2)+")/32";
 			
 			for(int i=0; i< colors.length; i++) {
 				service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, function, domainByVar, PIXELS_PER_POINT, i, colors[i]));
 			}
-			*/
+			
 			
 			//Euler PVI
 			/* 
@@ -141,7 +141,7 @@ public class PlotterDesktop {
 			}*/
 		
 			//Euler PVI vs Improved vs RungeKutta
-			/*  */
+			/*  
 			String functionA = "ln(t)";
 			String derivatedfunctionA = "1/t";
 			
@@ -153,7 +153,7 @@ public class PlotterDesktop {
 			service.submit(TaskGenerator.getEulerPVI(p, eulerVars, derivatedfunctionA, 1F, 0F, 8F, h, null,Color.RED));
 			service.submit(TaskGenerator.getImprovedEulerPVI(p, eulerVars, derivatedfunctionA, 1F, 0F, 8F, h, null,Color.BLUE));
 			service.submit(TaskGenerator.getRungeKuttaPVI(p, eulerVars, derivatedfunctionA, 1F, 0F, 8F, h, null,Color.GREEN));
-			
+			*/
 			
 		} catch (Exception e) {
 			e.printStackTrace();

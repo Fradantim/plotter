@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.fradantim.plotter.core.renderizable.generator.AxisGenerator;
 
@@ -36,6 +37,8 @@ public class AwarePlotter extends Plotter {
 	public List<Stadistic> getStadistics() {
 		List<Stadistic> stats = super.getStadistics();
 		stats.add(new Stadistic(this,"#Renderizables_",renderizables.size()));
+		stats.add(new Stadistic(" - "," - - - - - - - - - - - "));
+				
 		return stats;
 	}
 		
@@ -57,5 +60,10 @@ public class AwarePlotter extends Plotter {
 			addRenderizable(r);
 			});
 
+	}
+	
+	public void addRenderizables(RenderizableComponent component) {
+		components.add(component);
+		addRenderizables(component.getRenderizables());
 	}
 }

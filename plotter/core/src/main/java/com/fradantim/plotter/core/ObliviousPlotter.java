@@ -48,15 +48,21 @@ public class ObliviousPlotter extends Plotter {
 		super.dispose();
 	}
 
+	@Override
 	public synchronized void addRenderizable(Renderizable renderizable) {
 		renderizable.render(shapeRenderer);
 		
 		Gdx.graphics.requestRendering();
 	}
 	
+	@Override
 	public synchronized void addRenderizables(Collection<? extends Renderizable> renderizables) {
 		renderizables.forEach(r -> addRenderizable(r));
-		System.out.println("IN"+(i++));
 		Gdx.graphics.requestRendering();
+	}
+
+	@Override
+	public void addRenderizables(RenderizableComponent component) {
+		addRenderizables(component.getRenderizables());
 	}	
 }

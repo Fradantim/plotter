@@ -6,6 +6,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Color;
 import com.fradantim.plotter.core.Plotter;
 import com.fradantim.plotter.core.Renderizable;
+import com.fradantim.plotter.core.RenderizableComponent;
 import com.fradantim.plotter.core.processor.FunctionProcessor;
 import com.fradantim.plotter.core.processor.EulerPVIProcessor;
 import com.fradantim.plotter.core.processor.ImprovedEulerPVIProcessor;
@@ -95,6 +96,26 @@ final class SimpleFunctionTask implements Runnable{
 
 	@Override
 	public void run() {
+		
+		String name="F : f("+String.join(",", vars)+")=";
+		
+		if(derivationTimes==0) {
+			name+=function;
+		} else {
+			name+="("+function+")";
+			for(int i=0;i<derivationTimes;i++) {
+				name+="'";
+			}
+		}
+		
+		plotter.addRenderizables(
+				new RenderizableComponent(
+						Colorizer.colorize(FunctionProcessor.getImage(vars, function, domainByVar, pixelsPerPoint,derivationTimes), color),
+						color, 
+						name
+						)
+				);
+		
 		plotter.addRenderizables(Colorizer.colorize(FunctionProcessor.getImage(vars, function, domainByVar, pixelsPerPoint,derivationTimes), color));
 	}
 }
@@ -122,7 +143,15 @@ final class EulerPVITask implements Runnable{
 
 	@Override
 	public void run() {
-		plotter.addRenderizables(Colorizer.colorize(new EulerPVIProcessor().getImage(vars, derivatedFunction, t0, x0, T, h, N),color));
+		EulerPVIProcessor e = new EulerPVIProcessor();
+		
+		plotter.addRenderizables(
+				new RenderizableComponent(
+						Colorizer.colorize(e.getImage(vars, derivatedFunction, t0, x0, T, h, N),color),
+						color, 
+						e.toString()
+						)
+				);
 	}
 }
 
@@ -149,7 +178,15 @@ final class ImprovedEulerPVITask implements Runnable{
 
 	@Override
 	public void run() {
-		plotter.addRenderizables(Colorizer.colorize(new ImprovedEulerPVIProcessor().getImage(vars, derivatedFunction, t0, x0, T, h, N),color));
+		ImprovedEulerPVIProcessor e = new ImprovedEulerPVIProcessor();
+				
+		plotter.addRenderizables(
+				new RenderizableComponent(
+						Colorizer.colorize(e.getImage(vars, derivatedFunction, t0, x0, T, h, N),color),
+						color, 
+						e.toString()
+						)
+				);
 	}
 }
 
@@ -176,6 +213,15 @@ final class RungeKuttaPVITask implements Runnable{
 
 	@Override
 	public void run() {
-		plotter.addRenderizables(Colorizer.colorize(new RungeKuttaPVIProcessor().getImage(vars, derivatedFunction, t0, x0, T, h, N),color));
+		
+		RungeKuttaPVIProcessor e = new RungeKuttaPVIProcessor();
+		
+		plotter.addRenderizables(
+				new RenderizableComponent(
+						Colorizer.colorize(e.getImage(vars, derivatedFunction, t0, x0, T, h, N),color),
+						color, 
+						e.toString()
+						)
+				);
 	}
 }

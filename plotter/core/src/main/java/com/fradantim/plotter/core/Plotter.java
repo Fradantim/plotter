@@ -46,6 +46,8 @@ public abstract class Plotter implements ApplicationListener {
 	
 	protected List<Float> domainPoints;
 	
+	protected List<RenderizableComponent> components = new ArrayList<>();
+	
 	//PARA DEBUG
 	protected boolean debugOnScreen = true, listStadistics = true, drawGrid = true;
 	
@@ -97,6 +99,8 @@ public abstract class Plotter implements ApplicationListener {
 	public abstract void addRenderizable(Renderizable renderizable) ;
 	
 	public abstract void addRenderizables(Collection<? extends Renderizable> renderizables);
+	
+	public abstract void addRenderizables(RenderizableComponent component);
 	
 	@Override
 	public void dispose () {
@@ -155,12 +159,35 @@ public abstract class Plotter implements ApplicationListener {
 	private boolean isDebugRightPressed() { return Gdx.input.isKeyPressed(Keys.D); }
 	private boolean isDebugLeftPressed()  { return Gdx.input.isKeyPressed(Keys.A); }
 
+	
+	public List<Stadistic> getStadistics() {
+		List<Stadistic> stats = new ArrayList<>();
+		stats.add(new Stadistic("Gdx.gfx.FPS&deltaTime",String.valueOf(Gdx.graphics.getFramesPerSecond())));
+		stats.add(new Stadistic(this,"FontSize",String.valueOf(fontSize)));
+		stats.add(new Stadistic(this,"#PixelsPerPoint",pixelsPerPoint));
+		stats.add(new Stadistic(this,"DisplayPixRes (W,H)",getDisplayResolution()));
+		stats.add(new Stadistic(this,"CamPos____ (W,H)",getCamPos()+">"+getCamPos()));
+		stats.add(new Stadistic(this,"CamTopLeft (W,H)",getCamTopLeft()+">"+getCamTopLeft()));
+		stats.add(new Stadistic(this,"DisplayPointerPos (x,y)",beautifyVector(getDisplayPointerPos(),SIGNIFICATIVE_DECIMALS)));
+		stats.add(new Stadistic(this,"Coordinates____ + (x,y)",beautifyVector(transformToCoordinates(getDisplayPointerPos()), SIGNIFICATIVE_DECIMALS)));
+		stats.add(new Stadistic(" - "," - - - - - - - - - - - "));
+		return stats;
+	}
+	
 	private void debugOnScreen() {
 		batch.begin();
 	
 		if(listStadistics) {
 			String statsStr = String.join("\n",getStadistics().stream().map(Stadistic::toString).collect(Collectors.toList()));
 			font.draw(batch, statsStr, getCamTopLeft().x, getCamTopLeft().y);
+
+			for(int i=0; i<components.size(); i++) {
+				if(components.get(i)!=null) {
+					BitmapFont tempFont = FontUtils.getOnScreenFont(fontSize, components.get(i).getColor());
+					tempFont.draw(batch, (i+1) +" : "+components.get(i), getCamTopLeft().x, getCamTopLeft().y-(i+getStadistics().size())*fontSize);
+				}
+			}
+			
 		}
 		
 		batch.end();
@@ -227,19 +254,6 @@ public abstract class Plotter implements ApplicationListener {
 			}
 		}
 		return true;
-	}
-
-	public List<Stadistic> getStadistics() {
-		List<Stadistic> stats = new ArrayList<>();
-		stats.add(new Stadistic("Gdx.gfx.FPS&deltaTime",String.valueOf(Gdx.graphics.getFramesPerSecond())));
-		stats.add(new Stadistic(this,"FontSize",String.valueOf(fontSize)));
-		stats.add(new Stadistic(this,"#PixelsPerPoint",pixelsPerPoint));
-		stats.add(new Stadistic(this,"DisplayPixRes (W,H)",getDisplayResolution()));
-		stats.add(new Stadistic(this,"CamPos____ (W,H)",getCamPos()+">"+getCamPos()));
-		stats.add(new Stadistic(this,"CamTopLeft (W,H)",getCamTopLeft()+">"+getCamTopLeft()));
-		stats.add(new Stadistic(this,"DisplayPointerPos (x,y)",beautifyVector(getDisplayPointerPos(),SIGNIFICATIVE_DECIMALS)));
-		stats.add(new Stadistic(this,"Coordinates____ + (x,y)",beautifyVector(transformToCoordinates(getDisplayPointerPos()), SIGNIFICATIVE_DECIMALS)));
-		return stats;
 	}
 	
 	public String beautifyVector(Vector2 vector, int significativeDecimals) {

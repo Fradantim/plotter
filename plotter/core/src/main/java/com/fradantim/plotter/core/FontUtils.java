@@ -1,5 +1,8 @@
 package com.fradantim.plotter.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -28,7 +31,30 @@ public class FontUtils {
 		return getOnScreenFont(newFontSize, Colorizer.DEFAULT_COLOR);
 	}
 	
-	public static BitmapFont getOnScreenFont(int newFontSize, Color color) {
+	private static Map<Color, Map<Integer, BitmapFont>> fontCache = new HashMap<Color, Map<Integer,BitmapFont>>();
+	
+	public synchronized static BitmapFont getOnScreenFont(Integer newFontSize, Color color) {
+		Map<Integer,BitmapFont> sizeMap = fontCache.get(color);
+		
+		if(sizeMap!= null) {
+			BitmapFont mbf = sizeMap.get(newFontSize);
+			if(mbf != null) {
+				return mbf;
+			} else {
+				mbf= createFont(newFontSize, color);
+				sizeMap.put(newFontSize, mbf);
+				return mbf;
+			}
+		} else {
+			sizeMap = new HashMap<>();
+			BitmapFont mbf= createFont(newFontSize, color);
+			sizeMap.put(newFontSize, mbf);
+			fontCache.put(color, sizeMap);
+			return mbf;
+		}
+	}
+	
+	private static BitmapFont createFont(Integer newFontSize, Color color) {
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Courier Prime.ttf"));
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		parameter.size = newFontSize;
@@ -37,4 +63,5 @@ public class FontUtils {
 		generator.dispose(); // don't forget to dispose to avoid memory leaks!
 		return font;
 	}
+	
 }

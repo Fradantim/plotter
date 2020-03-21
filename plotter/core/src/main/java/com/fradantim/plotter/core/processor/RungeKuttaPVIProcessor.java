@@ -36,6 +36,8 @@ public class RungeKuttaPVIProcessor implements PVIProcessor{
 	
 	private Map<Float, Float> memory;
 	
+	private String toString="RK: ";
+	
 	@Override
 	public List<Renderizable> getImage(List<String> vars, String function, Float t0, Float x0, Float T, Float h, Integer N) {
 		if(h==null && N == null) {
@@ -50,9 +52,13 @@ public class RungeKuttaPVIProcessor implements PVIProcessor{
 		this.h=h;
 		this.N=N;
 		
+		toString+="f("+String.join(",", vars)+")="+function+"; t0="+t0+"; x0="+x0+"; T="+T;
+		
 		if(N==null) {
+			toString+="; h="+h;
 			this.N=new Float(Math.abs(Math.ceil((T-t0)/h))).intValue();
 		}else {
+			toString+="; N="+N;
 			this.h=new Float(Math.abs(Math.ceil((T-t0)/N)));
 		}
 		
@@ -116,5 +122,10 @@ public class RungeKuttaPVIProcessor implements PVIProcessor{
 	
 	private Double process(List<String> vars, String function, Map<String, Float> elementByVar) {
 		return FunctionProcessor.getImageAtElement(vars, function, elementByVar)*(t0<T?1:-1);
+	}
+	
+	@Override
+	public String toString() {
+		return toString;
 	}
 }
