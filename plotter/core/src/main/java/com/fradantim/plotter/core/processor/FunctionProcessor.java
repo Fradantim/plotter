@@ -1,4 +1,4 @@
-package com.fradantim.plotter.java.processor;
+package com.fradantim.plotter.core.processor;
 
 import java.io.IOException;
 import java.util.ArrayList;

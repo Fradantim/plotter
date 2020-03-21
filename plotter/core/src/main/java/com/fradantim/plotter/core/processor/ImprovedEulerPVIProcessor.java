@@ -1,4 +1,4 @@
-package com.fradantim.plotter.java.processor;
+package com.fradantim.plotter.core.processor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.renderizable.Line;
 
+
 /**
  * Supposing <i>vars</i>[0]='x' and <i>vars</i>[1]='t' <br>
  * <br>
@@ -18,10 +19,10 @@ import com.fradantim.plotter.core.renderizable.Line;
  * <br>
  * u(t)=~x(t) <br>
  * u<sub>0</sub>=<i>x0</i> <br>
- * u<sub>k</sub>=u<sub>k-1</sub> + h*f(t<sub>k-1</sub>,u<sub>k-1</sub>) <br>
+ * u<sub>k</sub>=u<sub>k-1</sub> + (h/2)*(f(t<sub>k-1</sub>,u<sub>k-1</sub>) + f(t<sub>k</sub>,u<sub>k-1</sub>+h*f(t<sub>k-1</sub>,u<sub>k-1</sub>))) <br>
  *
  */
-public class PVIEulerProcessor implements ProblemaValorInicialProcessor{
+public class ImprovedEulerPVIProcessor implements PVIProcessor{
 
 	private List<String> vars;
 	private String function;
@@ -56,12 +57,12 @@ public class PVIEulerProcessor implements ProblemaValorInicialProcessor{
 		List<Renderizable> result = new ArrayList<Renderizable>();
 
 		List<Vector2> puntos= new ArrayList<>();
-			
+	
 		for(int i=0; i<=this.N; i++) {
 			Float t= t0+i*this.h*((t0<T)?1:-1);
 			puntos.add(new Vector2(t, getValue(t)));
 		}
-		
+
 		for(int i=0; i<puntos.size()-1; i++) {
 			result.add(new Line(puntos.get(i), puntos.get(i+1)));
 		}
@@ -72,7 +73,7 @@ public class PVIEulerProcessor implements ProblemaValorInicialProcessor{
 	public Float getValue(Float t) {
 		if(t.equals(t0)) {
 			return x0;
-		}else {
+		} else {
 			Float previousT=t-(h*(t0<T?1:-1));
 			
 			Float previousValue=memory.get(previousT);
@@ -86,8 +87,17 @@ public class PVIEulerProcessor implements ProblemaValorInicialProcessor{
 			elementByVar.put(vars.get(1), previousValue.floatValue());
 			
 			Float newValue=previousValue+h*process(vars, function, elementByVar).floatValue();
-			memory.put(t, newValue);
-			return newValue;
+			
+			Map<String, Float> nextElementByVar= new HashMap<String, Float>();
+			nextElementByVar.put(vars.get(0), t);
+			nextElementByVar.put(vars.get(1), newValue);
+			
+			Float improvedNewValue=previousValue+(h/2)
+					*new Double(process(vars, function, elementByVar)
+							+ process(vars, function, nextElementByVar)).floatValue();
+			
+			memory.put(t, improvedNewValue);
+			return improvedNewValue;
 		}
 	}
 	

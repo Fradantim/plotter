@@ -17,12 +17,7 @@
 	</properties>
 
 	<dependencies>
-	
-		<dependency>
-        	<groupId>org.apache-extras.beanshell</groupId>
-        	<artifactId>bsh</artifactId>
-	    </dependency>
-	    
+
 		<dependency>
 			<groupId>com.fradantim</groupId>
 			<artifactId>plotter-core</artifactId>

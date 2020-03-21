@@ -1,4 +1,4 @@
-package com.fradantim.plotter.java.Threads;
+package com.fradantim.plotter.core.Threads;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,10 +6,10 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Color;
 import com.fradantim.plotter.core.Plotter;
 import com.fradantim.plotter.core.Renderizable;
+import com.fradantim.plotter.core.processor.FunctionProcessor;
+import com.fradantim.plotter.core.processor.EulerPVIProcessor;
+import com.fradantim.plotter.core.processor.ImprovedEulerPVIProcessor;
 import com.fradantim.plotter.core.renderizable.generator.Colorizer;
-import com.fradantim.plotter.java.processor.FunctionProcessor;
-import com.fradantim.plotter.java.processor.PVIEulerProcessor;
-import com.fradantim.plotter.java.processor.PVIImprovedEulerProcessor;
 
 public class TaskGenerator {
 	
@@ -113,7 +113,7 @@ final class EulerPVITask implements Runnable{
 
 	@Override
 	public void run() {
-		plotter.addRenderizables(Colorizer.colorize(new PVIEulerProcessor().getImage(vars, derivatedFunction, t0, x0, T, h, N),color));
+		plotter.addRenderizables(Colorizer.colorize(new EulerPVIProcessor().getImage(vars, derivatedFunction, t0, x0, T, h, N),color));
 	}
 }
 
@@ -140,6 +140,6 @@ final class ImprovedEulerPVITask implements Runnable{
 
 	@Override
 	public void run() {
-		plotter.addRenderizables(Colorizer.colorize(new PVIImprovedEulerProcessor().getImage(vars, derivatedFunction, t0, x0, T, h, N),color));
+		plotter.addRenderizables(Colorizer.colorize(new ImprovedEulerPVIProcessor().getImage(vars, derivatedFunction, t0, x0, T, h, N),color));
 	}
 }
