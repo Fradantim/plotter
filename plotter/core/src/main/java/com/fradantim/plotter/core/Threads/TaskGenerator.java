@@ -9,6 +9,7 @@ import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.processor.FunctionProcessor;
 import com.fradantim.plotter.core.processor.EulerPVIProcessor;
 import com.fradantim.plotter.core.processor.ImprovedEulerPVIProcessor;
+import com.fradantim.plotter.core.processor.RungeKuttaPVIProcessor;
 import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 
 public class TaskGenerator {
@@ -47,6 +48,14 @@ public class TaskGenerator {
 	
 	public static Runnable getImprovedEulerPVI(Plotter plotter, List<String> vars, String derivatedFunction, Float t0, Float x0, Float T, Float h, Integer N, Color color) {
 		return new ImprovedEulerPVITask(plotter, vars, derivatedFunction, t0, x0, T, h, N, color);
+	}
+	
+	public static Runnable getRungeKuttaPVI(Plotter plotter, List<String> vars, String derivatedFunction, Float t0, Float x0, Float T, Float h, Integer N) {
+		return new RungeKuttaPVITask(plotter, vars, derivatedFunction, t0, x0, T, h, N, null);
+	}
+	
+	public static Runnable getRungeKuttaPVI(Plotter plotter, List<String> vars, String derivatedFunction, Float t0, Float x0, Float T, Float h, Integer N, Color color) {
+		return new RungeKuttaPVITask(plotter, vars, derivatedFunction, t0, x0, T, h, N, color);
 	}
 }
 
@@ -141,5 +150,32 @@ final class ImprovedEulerPVITask implements Runnable{
 	@Override
 	public void run() {
 		plotter.addRenderizables(Colorizer.colorize(new ImprovedEulerPVIProcessor().getImage(vars, derivatedFunction, t0, x0, T, h, N),color));
+	}
+}
+
+final class RungeKuttaPVITask implements Runnable{
+	private Plotter plotter;
+	private List<String> vars;
+	private String derivatedFunction;
+	@SuppressWarnings("unused")
+	private Float t0, x0, T, h;
+	private Integer N;
+	private Color color;
+	
+	public RungeKuttaPVITask(Plotter plotter, List<String> vars, String derivatedFunction, Float t0, Float x0, Float T, Float h, Integer N, Color color) {
+		this.plotter=plotter;
+		this.vars = vars;
+		this.derivatedFunction = derivatedFunction;
+		this.t0 = t0;
+		this.x0 = x0;
+		this.T = T;
+		this.h = h;
+		this.N = N;
+		this.color = color!=null ? color : Colorizer.DEFAULT_COLOR;
+	}
+
+	@Override
+	public void run() {
+		plotter.addRenderizables(Colorizer.colorize(new RungeKuttaPVIProcessor().getImage(vars, derivatedFunction, t0, x0, T, h, N),color));
 	}
 }

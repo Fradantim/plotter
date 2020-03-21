@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.graphics.Color;
 import com.fradantim.plotter.core.AwarePlotter;
 import com.fradantim.plotter.core.Plotter;
 import com.fradantim.plotter.core.Threads.TaskGenerator;
@@ -139,19 +140,19 @@ public class PlotterDesktop {
 				}
 			}*/
 		
-			//Euler PVI vs Improved 
+			//Euler PVI vs Improved vs RungeKutta
 			/*  */
-			String functionA = "p(t,4)";
-			String derivatedfunctionA = "4*p(t,3)";
+			String functionA = "ln(t)";
+			String derivatedfunctionA = "1/t";
 			
-			int times=2;
-			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, functionA, domainByVar, PIXELS_PER_POINT, Colorizer.getColorFromGradient(-1)));
+			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, functionA, domainByVar, PIXELS_PER_POINT, Color.WHITE));
 			List<String> eulerVars=Arrays.asList("t","x");
 			
-			for(int i=0; i< times; i++) {
-				service.submit(TaskGenerator.getEulerPVI(p, eulerVars, derivatedfunctionA, 0F, 0F, 4F, new Double(1F/(Math.pow(2, i))).floatValue(), null,Colorizer.getColorFromGradient((times-i)*4)));
-				service.submit(TaskGenerator.getImprovedEulerPVI(p, eulerVars, derivatedfunctionA, 0F, 0F, -4F, new Double(1F/(Math.pow(2, i))).floatValue(), null,Colorizer.getColorFromGradient((times-i)*4)));
-			}
+			//Float h = 1F/4;
+			Float h = 1F;
+			service.submit(TaskGenerator.getEulerPVI(p, eulerVars, derivatedfunctionA, 1F, 0F, 8F, h, null,Color.RED));
+			service.submit(TaskGenerator.getImprovedEulerPVI(p, eulerVars, derivatedfunctionA, 1F, 0F, 8F, h, null,Color.BLUE));
+			service.submit(TaskGenerator.getRungeKuttaPVI(p, eulerVars, derivatedfunctionA, 1F, 0F, 8F, h, null,Color.GREEN));
 			
 			
 		} catch (Exception e) {
