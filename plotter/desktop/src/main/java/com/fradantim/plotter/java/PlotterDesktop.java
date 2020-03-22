@@ -1,6 +1,7 @@
 package com.fradantim.plotter.java;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -11,11 +12,60 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
 import com.fradantim.plotter.core.AwarePlotter;
 import com.fradantim.plotter.core.Plotter;
+import com.fradantim.plotter.core.Threads.ColorRunnable;
+import com.fradantim.plotter.core.Threads.NeedsDomain;
 import com.fradantim.plotter.core.Threads.TaskGenerator;
+import com.fradantim.plotter.java.swing.MainWindow;
 
 public class PlotterDesktop {
 	
 	private static final Integer PIXELS_PER_POINT=200;
+	
+	public static void pipeline(List<ColorRunnable> runables) {
+		Plotter p = new AwarePlotter();
+		p.setPixelsPerPoint(MainWindow.pixelsPerPoint);
+		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		new LwjglApplication(p, config);
+		
+		int corePoolSize = Runtime.getRuntime().availableProcessors();
+		corePoolSize = corePoolSize<=1 ? corePoolSize : corePoolSize-1;
+		ExecutorService service = Executors.newFixedThreadPool(corePoolSize);
+				
+		runables.forEach(r -> {
+			r.setPlotter(p);
+			if(r instanceof NeedsDomain) {
+				
+				HashMap<String, List<Float>> domainByVar = new HashMap<>();
+				
+				boolean first=true;
+				for(String var : ((NeedsDomain)r).getVars()) {
+					if(first) {
+						domainByVar.put(var, PlotterDesktop.getDomainPoints(p));
+						first=false;
+					} else {
+						domainByVar.put(var, Collections.emptyList());
+					}
+				}
+			}
+		});
+		
+		runables.forEach(r -> service.submit(r));
+		
+	}
+	
+	private static List<Float> getDomainPoints(Plotter p) {
+		List<Float> domainPoints= p.getDomainPoints();
+		while (domainPoints == null || domainPoints.isEmpty()) {
+			System.out.println("SLEEP");
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			domainPoints= p.getDomainPoints();
+		}
+		return domainPoints;
+	}
 	
 	public static void main (String[] args) {
 		Plotter p = new AwarePlotter();

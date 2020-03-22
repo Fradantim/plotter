@@ -56,6 +56,7 @@ public class FunctionProcessor {
 		return getImageAtElement(interpreter, vars, function, elementByVar);
 	}
 	
+	@SuppressWarnings("deprecation")
 	private static Double getImageAtElement(Interpreter interpreter, List<String> vars, String function, Map<String,Float> elementByVar) {
 		if(vars.size()!=elementByVar.size()){
 			throw new IllegalAccessError("Variable names and it's values must be same size and same order.");

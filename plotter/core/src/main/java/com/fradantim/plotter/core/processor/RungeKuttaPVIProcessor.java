@@ -26,42 +26,16 @@ import com.fradantim.plotter.core.renderizable.Line;
  * a<sub>3</sub>=f(t<sub>k-1</sub> + h/2, u<sub>k-1</sub>*a<sub>2</sub>*h/2) <br>
  * a<sub>4</sub>=f(t<sub>k-1</sub> + h, u<sub>k-1</sub>*a<sub>3</sub>*h) <br>
  */
-public class RungeKuttaPVIProcessor implements PVIProcessor{
+public class RungeKuttaPVIProcessor extends PVIProcessor{
 
-	private List<String> vars;
-	private String function;
-	@SuppressWarnings("unused")
-	private Float t0, x0, T, h;
-	private Integer N;
+	public RungeKuttaPVIProcessor(List<String> vars, String function, Float t0, Float x0, Float T, Float h, Integer N) {
+		super(vars, function, t0, x0, T, h, N);
+	}
 	
 	private Map<Float, Float> memory;
 	
-	private String toString="RK: ";
-	
 	@Override
-	public List<Renderizable> getImage(List<String> vars, String function, Float t0, Float x0, Float T, Float h, Integer N) {
-		if(h==null && N == null) {
-			throw new IllegalArgumentException("h and N where both null, at least on of those needs to have a value.");
-		}
-		
-		this.vars=vars;
-		this.function=function;
-		this.t0=t0;
-		this.x0=x0;
-		this.T=T;
-		this.h=h;
-		this.N=N;
-		
-		toString+="f("+String.join(",", vars)+")="+function+"; t0="+t0+"; x0="+x0+"; T="+T;
-		
-		if(N==null) {
-			toString+="; h="+h;
-			this.N=new Float(Math.abs(Math.ceil((T-t0)/h))).intValue();
-		}else {
-			toString+="; N="+N;
-			this.h=new Float(Math.abs(Math.ceil((T-t0)/N)));
-		}
-		
+	public List<Renderizable> getImage() {
 		memory= new HashMap<>();
 		memory.put(t0, x0);
 		List<Renderizable> result = new ArrayList<Renderizable>();
@@ -123,9 +97,9 @@ public class RungeKuttaPVIProcessor implements PVIProcessor{
 	private Double process(List<String> vars, String function, Map<String, Float> elementByVar) {
 		return FunctionProcessor.getImageAtElement(vars, function, elementByVar)*(t0<T?1:-1);
 	}
-	
+
 	@Override
-	public String toString() {
-		return toString;
+	protected String getName() {
+		return "RK";
 	}
 }

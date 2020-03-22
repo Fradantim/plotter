@@ -1,6 +1,7 @@
 package com.fradantim.plotter.core.renderizable.generator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -11,6 +12,21 @@ public class Colorizer {
 	
 	private static final Float delta =12.28F;
 	
+	private static final List<Color> simpleColors=Arrays.asList(Color.WHITE, Color.LIGHT_GRAY, Color.GRAY,
+			Color.DARK_GRAY, Color.BLACK, Color.BLUE, Color.NAVY, Color.ROYAL, Color.SLATE, Color.SKY, Color.CYAN, 
+			Color.TEAL, Color.GREEN, Color.CHARTREUSE, Color.LIME, Color.FOREST, Color.OLIVE, Color.YELLOW, 
+			Color.GOLD, Color.GOLDENROD, Color.ORANGE, Color.BROWN, Color.TAN, Color.FIREBRICK, Color.RED, 
+			Color.SCARLET, Color.CORAL, Color.SALMON, Color.PINK, Color.MAGENTA, Color.PURPLE, Color.VIOLET, Color.MAROON);;
+	
+	private static final List<java.awt.Color> simpleAwtColors= new ArrayList<>();
+	
+	static {
+		simpleColors.forEach(c -> {
+			simpleAwtColors.add(badLogicColorToAwtColor(c));
+		});
+	}
+			
+			
 	public static final Color DEFAULT_COLOR= Color.WHITE;
 
 	public static Renderizable colorize(Renderizable renderizable, Color color) {
@@ -53,4 +69,22 @@ public class Colorizer {
 		}
 		return result;
 	}
+	
+	public static List<Color> getSimpleColors(){
+		return simpleColors;
+	}
+	
+	public static List<java.awt.Color> getSimpleAwtColors(){
+		return simpleAwtColors;
+	}
+
+	public static java.awt.Color badLogicColorToAwtColor(Color c){
+		return new java.awt.Color(c.r, c.g, c.b);
+	}
+	
+	public static Color AwtColorTobadLogicColor(java.awt.Color c){
+		return new Color(c.getRGB());
+	}
+	
+	
 }
