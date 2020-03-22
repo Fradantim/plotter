@@ -1,19 +1,31 @@
 package com.fradantim.plotter.java.swing;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
+import javax.swing.plaf.basic.BasicArrowButton;
+import javax.swing.plaf.basic.BasicComboBoxUI;
 
 import com.fradantim.plotter.core.Threads.TaskGenerator;
+import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 
 public abstract class PVIComponent {
 
@@ -37,50 +49,42 @@ public abstract class PVIComponent {
 	protected Float T;
 	protected Float h;
 	protected Integer N;
+	protected Color color;
 	
 	protected abstract String getName();
 	
-	//TODO el combo de colores
-	/*
-	   JComboBox cmb = new JComboBox();
-	    cmb.setEditable(true);
-	    cmb.setEditor(new WComboBoxEditor(getContentPane().getBackground()));
+	protected JComboBox<Color> colorBox = ColorComboBox.getComboBox();
+	
 
-	    // To change the arrow button's background        
-	    cmb.setUI(new BasicComboBoxUI(){
-	        protected JButton createArrowButton()
-	        {
-	            BasicArrowButton arrowButton = new BasicArrowButton(BasicArrowButton.SOUTH, null, null, Color.GRAY, null);
-	            return arrowButton;
-	        }
-	    });
-	    cmb.setModel(new DefaultComboBoxModel(new String[] { "a", "b", "c" }));
-	*/
+
 	protected JButton addButon = new JButton("Agregar");
 	
 	public Component getPVIWindow() {
 		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(0,2));
-		panel.add(functionLabel, BorderLayout.CENTER);
-		panel.add(functionTF, BorderLayout.CENTER);
+		panel.setLayout(new SizeableGridLayout(0,2));
+		panel.add(new JLabel(""));
+		panel.add(new JLabel(getName()+" Solo ingrese h o N, no ambos."));
 		
-		panel.add(t0Label, BorderLayout.CENTER);
-		panel.add(t0TF, BorderLayout.CENTER);
+		panel.add(functionLabel);
+		panel.add(functionTF);
 		
-		panel.add(x0Label, BorderLayout.CENTER);
-		panel.add(x0TF, BorderLayout.CENTER);
+		panel.add(t0Label);
+		panel.add(t0TF);
 		
-		panel.add(TLabel, BorderLayout.CENTER);
-		panel.add(TTF, BorderLayout.CENTER);
+		panel.add(x0Label);
+		panel.add(x0TF);
 		
-		panel.add(hLabel, BorderLayout.CENTER);
-		panel.add(hTF, BorderLayout.CENTER);
+		panel.add(TLabel);
+		panel.add(TTF);
 		
-		panel.add(NLabel, BorderLayout.CENTER);
-		panel.add(NTF, BorderLayout.CENTER);
+		panel.add(hLabel);
+		panel.add(hTF);
 		
-		//panel.add(t0Label, BorderLayout.CENTER);
-		panel.add(addButon, BorderLayout.CENTER);
+		panel.add(NLabel);
+		panel.add(NTF);
+		
+		panel.add(addButon);
+		panel.add(colorBox);
 		
 		return panel;
 	}
@@ -127,13 +131,15 @@ public abstract class PVIComponent {
 		if(h!= null && N!= null) {
 			throw new IllegalArgumentException("<html>Error, no puede cargarse tanto T como h, solo una debe cargarse.</html>");
 		}
+		
+		color=(Color)colorBox.getSelectedItem();
 	}
 }
 
 final class EulerPVIPanel extends PVIComponent{
 
 	@Override
-	protected String getName() { return "Metodo de Euler. Solo cargue h o N, no ambos.";}
+	protected String getName() { return "Metodo de Euler.";}
 	
 	{
 		addButon.addActionListener(new ActionListener() {
@@ -142,13 +148,12 @@ final class EulerPVIPanel extends PVIComponent{
 			public void actionPerformed(ActionEvent e) {
 				try {
 					retrieveValues();
-					MainWindow.addColorRunnable(TaskGenerator.getEulerPVI(null, Arrays.asList("t","x"), function, t0, x0, T, h, N));
+					MainWindow.addColorRunnable(TaskGenerator.getEulerPVI(null, Arrays.asList("t","x"), function, t0, x0, T, h, N, Colorizer.AwtColorTobadLogicColor(color)));
+					MainWindow.drawMainWindow();
 				} catch (Exception ex) {
 					 JOptionPane.showMessageDialog(null, ex.getMessage());
 					 ex.printStackTrace();
 				}
-				
-				MainWindow.drawMainWindow();
 			}
 		});
 		

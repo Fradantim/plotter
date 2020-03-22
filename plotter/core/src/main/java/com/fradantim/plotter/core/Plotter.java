@@ -42,7 +42,7 @@ public abstract class Plotter implements ApplicationListener {
 	
 	protected Integer fontSize, pixelsPerPoint;
 
-	protected boolean fullScreen = true, firstRender=true;
+	protected boolean fullScreen = false, firstRender=true;
 	
 	protected List<Float> domainPoints;
 	

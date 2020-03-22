@@ -18,14 +18,19 @@ public class Colorizer {
 			Color.GOLD, Color.GOLDENROD, Color.ORANGE, Color.BROWN, Color.TAN, Color.FIREBRICK, Color.RED, 
 			Color.SCARLET, Color.CORAL, Color.SALMON, Color.PINK, Color.MAGENTA, Color.PURPLE, Color.VIOLET, Color.MAROON);;
 	
-	private static final List<java.awt.Color> simpleAwtColors= new ArrayList<>();
+	private static final List<java.awt.Color> simpleAwtColors;
+	private final static java.awt.Color[] simpleAwtColorsArray;
 	
-	static {
+	static{
+		simpleAwtColors= new ArrayList<>();
+		
 		simpleColors.forEach(c -> {
 			simpleAwtColors.add(badLogicColorToAwtColor(c));
 		});
+		
+		simpleAwtColorsArray= new java.awt.Color[Colorizer.getSimpleAwtColors().size()];
+		Colorizer.getSimpleAwtColors().toArray(simpleAwtColorsArray);
 	}
-			
 			
 	public static final Color DEFAULT_COLOR= Color.WHITE;
 
@@ -59,7 +64,6 @@ public class Colorizer {
 		return new Color(red.floatValue()/256,grn.floatValue()/256, blu.floatValue()/256,0);
 	}
 	
-	
 	public static List<Color> makeColorGradient(Float frequency1, Float frequency2, Float frequency3,
 		Float phase1, Float phase2, Float phase3,
 		Integer center, Integer width, Integer ammount) {
@@ -77,6 +81,10 @@ public class Colorizer {
 	public static List<java.awt.Color> getSimpleAwtColors(){
 		return simpleAwtColors;
 	}
+	
+	public static java.awt.Color[] getSimpleAwtColorsArray(){
+		return simpleAwtColorsArray;
+	}
 
 	public static java.awt.Color badLogicColorToAwtColor(Color c){
 		return new java.awt.Color(c.r, c.g, c.b);
@@ -85,6 +93,4 @@ public class Colorizer {
 	public static Color AwtColorTobadLogicColor(java.awt.Color c){
 		return new Color(c.getRGB());
 	}
-	
-	
 }

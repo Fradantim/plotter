@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.SpringLayout;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -26,8 +27,6 @@ import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 
 public class MainWindow{
 
-	private static final String BIG_LINE="___________________________________________________________________________________________";
-	
 	private static final JFrame frame = new JFrame("Plotter MyS");
 	
 	public static Integer pixelsPerPoint=250;
@@ -61,10 +60,9 @@ public class MainWindow{
 		listJpanel.setLayout(new GridLayout(0,1));
 		if(jobs.size()>0) {
 			listJpanel.add(new Label("Elementos a cargar: "), BorderLayout.NORTH);
+			JPanel inner = new JPanel();
+			inner.setLayout(new SizeableGridLayout(0,2));
 			for(int i=0; i<jobs.size(); i++) {
-				JPanel inner = new JPanel();
-				inner.setLayout(new SpringLayout());
-
 				JButton button = new JButton("X");
 				button.setBackground(Colorizer.badLogicColorToAwtColor(jobs.get(i).getColor()));
 				button.addActionListener(getButtonRemoveActionListener(i));
@@ -79,7 +77,7 @@ public class MainWindow{
 			listJpanel.add(new Label("Elija elementos para cargar ^"), BorderLayout.NORTH);
 		}
 		
-		listJpanel.add(new Label(BIG_LINE), BorderLayout.CENTER);
+		listJpanel.add(new JSeparator(), BorderLayout.CENTER);
 		
 		return listJpanel;
 	}
