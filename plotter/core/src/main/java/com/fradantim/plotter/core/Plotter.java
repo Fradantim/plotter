@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Application;
@@ -42,7 +44,7 @@ public abstract class Plotter implements ApplicationListener {
 	
 	protected Integer fontSize, pixelsPerPoint;
 
-	protected boolean fullScreen = false, firstRender=true;
+	protected boolean fullScreen = true, firstRender=true;
 	
 	protected List<Float> domainPoints;
 	
@@ -270,7 +272,28 @@ public abstract class Plotter implements ApplicationListener {
 
 	public void resume() {}
 	
+	public Map<String, List<Float>> getDomainByVar(List<String> vars){
+		Map<String, List<Float>> domainByVar = new HashMap<String, List<Float>>();
+		if(vars.size()>0) {
+			domainByVar.put(vars.get(0), getDomainPoints());
+			
+			for(int i=1; i<vars.size(); i++) {
+				domainByVar.put(vars.get(i), Collections.emptyList());
+			}
+		}
+		
+		return domainByVar;
+	}	
+	
 	public List<Float> getDomainPoints(){
+		while (domainPoints == null || domainPoints.isEmpty()) {
+			System.out.println(Thread.currentThread().getId()+": Waiting for plotter's domain points to be built.");
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		return domainPoints;
 	}
 	
@@ -306,6 +329,10 @@ public abstract class Plotter implements ApplicationListener {
 	
 	public Float getHeigth() {
 		return getDisplayResolution().y/2/pixelsPerPoint;
+	}
+	
+	public boolean readyToRender() {
+		return domainPoints!=null && !domainPoints.isEmpty();
 	}
 	
 	public void takeScreenShot() {

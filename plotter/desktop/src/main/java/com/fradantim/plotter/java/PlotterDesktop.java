@@ -1,7 +1,6 @@
 package com.fradantim.plotter.java;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -13,7 +12,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.fradantim.plotter.core.AwarePlotter;
 import com.fradantim.plotter.core.Plotter;
 import com.fradantim.plotter.core.Threads.ColorRunnable;
-import com.fradantim.plotter.core.Threads.NeedsDomain;
 import com.fradantim.plotter.core.Threads.TaskGenerator;
 import com.fradantim.plotter.java.swing.MainWindow;
 
@@ -33,24 +31,8 @@ public class PlotterDesktop {
 				
 		runables.forEach(r -> {
 			r.setPlotter(p);
-			if(r instanceof NeedsDomain) {
-				
-				HashMap<String, List<Float>> domainByVar = new HashMap<>();
-				
-				boolean first=true;
-				for(String var : ((NeedsDomain)r).getVars()) {
-					if(first) {
-						domainByVar.put(var, PlotterDesktop.getDomainPoints(p));
-						first=false;
-					} else {
-						domainByVar.put(var, Collections.emptyList());
-					}
-				}
-			}
-		});
-		
-		runables.forEach(r -> service.submit(r));
-		
+			service.submit(r);
+		});		
 	}
 	
 	private static List<Float> getDomainPoints(Plotter p) {
@@ -127,7 +109,7 @@ public class PlotterDesktop {
 			String function = "p(t,"+(colors.length-1)+")/5000";
 			
 			for(int i=0; i< colors.length; i++) {
-				service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, function, domainByVar, PIXELS_PER_POINT, i, colors[i]));
+				service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, function, PIXELS_PER_POINT, i, colors[i]));
 			}
 			
 			

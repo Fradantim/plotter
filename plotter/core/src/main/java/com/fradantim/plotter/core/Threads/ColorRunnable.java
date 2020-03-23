@@ -7,6 +7,9 @@ public interface ColorRunnable extends Runnable{
 	
 	public Color getColor();
 	
-	public void setPlotter(Plotter p );	
-
+	public void setPlotter(Plotter plotter);	
+	
+	public default String getFormattedName() {
+		return toString();
+	}
 }

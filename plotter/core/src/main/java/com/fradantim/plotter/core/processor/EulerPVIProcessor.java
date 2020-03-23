@@ -76,7 +76,7 @@ public class EulerPVIProcessor extends PVIProcessor{
 	}
 	
 	@Override
-	protected String getName() {
+	public String getName() {
 		return "E ";
 	}
 }

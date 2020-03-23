@@ -99,7 +99,7 @@ public class RungeKuttaPVIProcessor extends PVIProcessor{
 	}
 
 	@Override
-	protected String getName() {
+	public String getName() {
 		return "RK";
 	}
 }

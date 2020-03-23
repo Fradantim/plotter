@@ -2,6 +2,7 @@ package com.fradantim.plotter.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
@@ -45,7 +46,14 @@ public class AwarePlotter extends Plotter {
 				
 		return stats;
 	}
-		
+	
+	@Override
+	public boolean readyToRender() {
+		if(rectangleOverScreen!= null)
+			return super.readyToRender();
+		return false;
+	}
+	
 	public void emptyRenderizables() {
 		this.renderizables=new ArrayList<>();
 	}
@@ -69,6 +77,16 @@ public class AwarePlotter extends Plotter {
 	}
 	
 	public void addRenderizables(RenderizableComponent component) {
+		
+		while (!readyToRender()) {
+			System.out.println(Thread.currentThread().getId()+": Waiting for plotter to be ready to render.");
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		components.add(component);
 		addRenderizables(component.getRenderizables());
 	}

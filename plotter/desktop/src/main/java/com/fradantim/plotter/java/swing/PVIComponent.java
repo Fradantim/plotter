@@ -93,6 +93,14 @@ public abstract class PVIComponent {
 		return new EulerPVIPanel();
 	}
 	
+	public static PVIComponent getImprovedEulerPVI() {
+		return new ImprovedEulerPVIPanel();
+	}
+	
+	public static PVIComponent getRungeKuttaEulerPVI() {
+		return new RungeKuttaPVIPanel();
+	}
+	
 	protected void retrieveValues(){
 		function = functionTF.getText();
 		
@@ -149,6 +157,54 @@ final class EulerPVIPanel extends PVIComponent{
 				try {
 					retrieveValues();
 					MainWindow.addColorRunnable(TaskGenerator.getEulerPVI(null, Arrays.asList("t","x"), function, t0, x0, T, h, N, Colorizer.AwtColorTobadLogicColor(color)));
+					MainWindow.drawMainWindow();
+				} catch (Exception ex) {
+					 JOptionPane.showMessageDialog(null, ex.getMessage());
+					 ex.printStackTrace();
+				}
+			}
+		});
+		
+	}
+}
+
+final class ImprovedEulerPVIPanel extends PVIComponent{
+
+	@Override
+	protected String getName() { return "Metodo de Euler Mejorado.";}
+	
+	{
+		addButon.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					retrieveValues();
+					MainWindow.addColorRunnable(TaskGenerator.getImprovedEulerPVI(null, Arrays.asList("t","x"), function, t0, x0, T, h, N, Colorizer.AwtColorTobadLogicColor(color)));
+					MainWindow.drawMainWindow();
+				} catch (Exception ex) {
+					 JOptionPane.showMessageDialog(null, ex.getMessage());
+					 ex.printStackTrace();
+				}
+			}
+		});
+		
+	}
+}
+
+final class RungeKuttaPVIPanel extends PVIComponent{
+
+	@Override
+	protected String getName() { return "Metodo de Runge Kutta de 4to orden.";}
+	
+	{
+		addButon.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					retrieveValues();
+					MainWindow.addColorRunnable(TaskGenerator.getRungeKuttaPVI(null, Arrays.asList("t","x"), function, t0, x0, T, h, N, Colorizer.AwtColorTobadLogicColor(color)));
 					MainWindow.drawMainWindow();
 				} catch (Exception ex) {
 					 JOptionPane.showMessageDialog(null, ex.getMessage());

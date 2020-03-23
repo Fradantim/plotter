@@ -39,13 +39,41 @@ public abstract class PVIProcessor {
 		}
 	}
 	
-	protected abstract String getName();
+	public abstract String getName();
 	
 	public abstract List<Renderizable> getImage();
 	
 	@Override
 	public String toString() {
 		return toString;
+	}
+
+	public List<String> getVars() {
+		return vars;
+	}
+
+	public String getFunction() {
+		return function;
+	}
+
+	public Float getT0() {
+		return t0;
+	}
+
+	public Float getX0() {
+		return x0;
+	}
+
+	public Float getT() {
+		return T;
+	}
+
+	public Float getH() {
+		return h;
+	}
+
+	public Integer getN() {
+		return N;
 	}
 }
 

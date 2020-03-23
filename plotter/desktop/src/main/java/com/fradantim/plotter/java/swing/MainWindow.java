@@ -3,24 +3,24 @@ package com.fradantim.plotter.java.swing;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import javax.swing.SpringLayout;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import com.badlogic.gdx.graphics.Color;
 import com.fradantim.plotter.core.Threads.ColorRunnable;
 import com.fradantim.plotter.core.Threads.TaskGenerator;
 import com.fradantim.plotter.core.renderizable.generator.Colorizer;
@@ -43,16 +43,14 @@ public class MainWindow{
 	
 	static {
 		List<String> vars=Arrays.asList("t");
-		HashMap<String, List<Float>> domainByVar= new HashMap<>();
-		domainByVar.put(vars.get(0), null);
 		
 		String functionA = "p(t,2)";
 		String derivatedfunctionA = "2*t";
 		
 		List<String> eulerVars=Arrays.asList("t","x");
 		
-		jobs.add(TaskGenerator.getSimpleFunctionTask(null, vars, functionA, domainByVar, pixelsPerPoint, com.badlogic.gdx.graphics.Color.GREEN));
-		jobs.add(TaskGenerator.getEulerPVI(null, eulerVars, derivatedfunctionA, 0F, 0F, 4F, 0.25F, null,com.badlogic.gdx.graphics.Color.BLUE));
+		jobs.add(TaskGenerator.getSimpleFunctionTask(null, vars, functionA, pixelsPerPoint, Color.GREEN));
+		jobs.add(TaskGenerator.getEulerPVI(null, eulerVars, derivatedfunctionA, 0F, 0F, 4F, 0.25F, null, Color.BLUE));
 	}
 	
 	private static Component drawList() {
@@ -68,7 +66,7 @@ public class MainWindow{
 				button.addActionListener(getButtonRemoveActionListener(i));
 				inner.add(button);
 				
-				Label label = new Label("    ("+i+") "+jobs.get(i));
+				JLabel label = new JLabel(jobs.get(i).getFormattedName());
 				inner.add(label);
 				
 				listJpanel.add(inner, BorderLayout.CENTER);
@@ -121,8 +119,8 @@ public class MainWindow{
     private static void createAndShowGUI() {
         //Create and set up the window.
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setFont(new Font("Dialog", 0, 20));
         frame.setJMenuBar(MenuBar.buildMenuBar(frame));  
-        //Set up the content pane.
         drawMainWindow();
     }
     
@@ -131,6 +129,7 @@ public class MainWindow{
         try {
             //UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
             UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+            setUIFont (new javax.swing.plaf.FontUIResource("Courier",Font.PLAIN,16));
         } catch (UnsupportedLookAndFeelException ex) {
             ex.printStackTrace();
         } catch (IllegalAccessException ex) {
@@ -151,4 +150,14 @@ public class MainWindow{
             }
         });
     }
+    
+    public static void setUIFont (javax.swing.plaf.FontUIResource f){
+        java.util.Enumeration keys = UIManager.getDefaults().keys();
+        while (keys.hasMoreElements()) {
+          Object key = keys.nextElement();
+          Object value = UIManager.get (key);
+          if (value instanceof javax.swing.plaf.FontUIResource)
+            UIManager.put (key, f);
+          }
+        } 
 }
