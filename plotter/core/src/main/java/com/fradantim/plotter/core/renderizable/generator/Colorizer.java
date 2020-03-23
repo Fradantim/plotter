@@ -87,10 +87,10 @@ public class Colorizer {
 	}
 
 	public static java.awt.Color badLogicColorToAwtColor(Color c){
-		return new java.awt.Color(c.r, c.g, c.b);
+		return new java.awt.Color(c.r, c.g, c.b, c.a);
 	}
 	
 	public static Color AwtColorTobadLogicColor(java.awt.Color c){
-		return new Color(c.getRGB());
+		return new Color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
 	}
 }

@@ -183,13 +183,14 @@ public abstract class Plotter implements ApplicationListener {
 
 			for(int i=0; i<components.size(); i++) {
 				if(components.get(i)!=null) {
-					BitmapFont tempFont = FontUtils.getOnScreenFont(fontSize, components.get(i).getColor());
-					tempFont.draw(batch, (i+1) +" : "+components.get(i), getCamTopLeft().x, getCamTopLeft().y-(i+getStadistics().size())*fontSize);
+					RenderizableComponent component = components.get(i); 
+					BitmapFont colorFont = FontUtils.getOnScreenFont(fontSize, component.getColor());
+					String key="[#"+(i+1) +"] ~> ";
+					colorFont.draw(batch, key, getCamTopLeft().x , getCamTopLeft().y-(i+getStadistics().size())*fontSize);
+					font.draw(batch,component.toString(), getCamTopLeft().x+(key.length()-3)*fontSize, getCamTopLeft().y-(i+getStadistics().size())*fontSize);
 				}
 			}
-			
 		}
-		
 		batch.end();
 	}
 		

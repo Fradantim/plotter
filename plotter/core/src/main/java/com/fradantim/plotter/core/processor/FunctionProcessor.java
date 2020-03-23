@@ -140,12 +140,17 @@ public class FunctionProcessor {
 		else {
 			Map<String,Float> nextElementsByVar= new HashMap<>();
 			elementByVar.keySet().forEach(var -> nextElementsByVar.put(var, elementByVar.get(var)+1F/pointsPerPoint) );
-				
-			return  (
-						getImageAtElement(interpreter, vars, function, nextElementsByVar, pointsPerPoint, derivationTimes-1)
-						-
-						getImageAtElement(interpreter, vars, function, elementByVar, pointsPerPoint, derivationTimes-1)
-					)/ (1D/pointsPerPoint);
+			
+			Double thisValue=getImageAtElement(interpreter, vars, function, elementByVar, pointsPerPoint, derivationTimes-1);
+			if(thisValue == null) {
+				return null;
+			}
+			Double nextValue=getImageAtElement(interpreter, vars, function, nextElementsByVar, pointsPerPoint, derivationTimes-1);
+			if(nextValue == null) {
+				return null;
+			}
+			
+			return  (nextValue - thisValue)/(1D/pointsPerPoint);
 		}
 	}
 	

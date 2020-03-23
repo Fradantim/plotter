@@ -35,20 +35,6 @@ public class PlotterDesktop {
 		});		
 	}
 	
-	private static List<Float> getDomainPoints(Plotter p) {
-		List<Float> domainPoints= p.getDomainPoints();
-		while (domainPoints == null || domainPoints.isEmpty()) {
-			System.out.println("SLEEP");
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			domainPoints= p.getDomainPoints();
-		}
-		return domainPoints;
-	}
-	
 	public static void main (String[] args) {
 		Plotter p = new AwarePlotter();
 		//Plotter p = new ObliviousPlotter();
@@ -78,29 +64,29 @@ public class PlotterDesktop {
 			domainByVar.put(vars.get(0), domainPoints);
 			
 			/*
-			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "p(-t,3)", domainByVar, PIXELS_PER_POINT, Color.CORAL));
-			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "log(t)", domainByVar, PIXELS_PER_POINT, Color.CYAN));
-			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "tan(t)", domainByVar, PIXELS_PER_POINT, Color.GREEN));
+			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "p(-t,3)", domainByVar, Color.CORAL));
+			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "log(t)", domainByVar, Color.CYAN));
+			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "tan(t)", domainByVar, Color.GREEN));
 			*/
 			
 			//Funciones salto
 			/*
-			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "p(e,-p(t,2))+1", domainByVar, PIXELS_PER_POINT, Color.RED));
-			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "t-toInt(t)", domainByVar, PIXELS_PER_POINT, Color.BLUE));
-			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "t/abs(t)", domainByVar, PIXELS_PER_POINT, Color.YELLOW));
+			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "p(e,-p(t,2))+1", domainByVar, Color.RED));
+			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "t-toInt(t)", domainByVar, Color.BLUE));
+			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "t/abs(t)", domainByVar, Color.YELLOW));
 			*/
 						
 			//dna
 			/*
-			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "sin(t)", domainByVar, PIXELS_PER_POINT, Color.RED));
-			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "sin(t+pi)", domainByVar, PIXELS_PER_POINT, Color.BLUE));
+			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "sin(t)", domainByVar, Color.RED));
+			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "sin(t+pi)", domainByVar, Color.BLUE));
 			*/
 			
 			//trifasica
 			/*
-			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "sin(t)", domainByVar, PIXELS_PER_POINT, Color.BLUE));
-			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "sin(t+pi*2/3)", domainByVar, PIXELS_PER_POINT, Color.RED));
-			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "sin(t+pi*4/3)", domainByVar, PIXELS_PER_POINT, Color.GREEN));
+			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "sin(t)", domainByVar, Color.BLUE));
+			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "sin(t+pi*2/3)", domainByVar, Color.RED));
+			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, "sin(t+pi*4/3)", domainByVar, Color.GREEN));
 			*/
 			
 			//derivacion
@@ -109,7 +95,7 @@ public class PlotterDesktop {
 			String function = "p(t,"+(colors.length-1)+")/5000";
 			
 			for(int i=0; i< colors.length; i++) {
-				service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, function, PIXELS_PER_POINT, i, colors[i]));
+				service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, function, i, colors[i]));
 			}
 			
 			
@@ -121,8 +107,8 @@ public class PlotterDesktop {
 			String functionB = "-p(t,2)";
 			String derivatedfunctionB = "-2*t";
 			
-			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, functionA, domainByVar, PIXELS_PER_POINT, Color.GREEN));
-			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, functionB, domainByVar, PIXELS_PER_POINT, Color.BLUE));
+			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, functionA, domainByVar, Color.GREEN));
+			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, functionB, domainByVar, Color.BLUE));
 
 			List<String> eulerVars=Arrays.asList("t","x");
 			
@@ -143,7 +129,7 @@ public class PlotterDesktop {
 			String derivatedfunctionA = "2*t";
 			
 			int times=10;
-			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, functionA, domainByVar, PIXELS_PER_POINT, Colorizer.getColorFromGradient(0)));
+			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, functionA, domainByVar, Colorizer.getColorFromGradient(0)));
 			List<String> eulerVars=Arrays.asList("t","x");
 			
 			for(int i=0; i< times-1; i++) {	
@@ -176,7 +162,7 @@ public class PlotterDesktop {
 			String functionA = "ln(t)";
 			String derivatedfunctionA = "1/t";
 			
-			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, functionA, domainByVar, PIXELS_PER_POINT, Color.WHITE));
+			service.submit(TaskGenerator.getSimpleFunctionTask(p, vars, functionA, domainByVar, Color.WHITE));
 			List<String> eulerVars=Arrays.asList("t","x");
 			
 			//Float h = 1F/4;

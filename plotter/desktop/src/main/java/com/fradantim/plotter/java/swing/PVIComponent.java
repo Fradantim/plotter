@@ -1,33 +1,25 @@
 package com.fradantim.plotter.java.swing;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.List;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
 import javax.swing.JTextField;
-import javax.swing.plaf.basic.BasicArrowButton;
-import javax.swing.plaf.basic.BasicComboBoxUI;
 
 import com.fradantim.plotter.core.Threads.TaskGenerator;
 import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 
-public abstract class PVIComponent {
+public abstract class PVIComponent implements ComponentGenerator{
+	
+	protected static final List<String> vars=Arrays.asList("t","x");
 
 	protected JTextField functionTF = new JTextField();
 	protected JTextField t0TF = new JTextField();
@@ -59,7 +51,8 @@ public abstract class PVIComponent {
 
 	protected JButton addButon = new JButton("Agregar");
 	
-	public Component getPVIWindow() {
+	@Override
+	public Component getComponent() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new SizeableGridLayout(0,2));
 		panel.add(new JLabel(""));
@@ -156,7 +149,7 @@ final class EulerPVIPanel extends PVIComponent{
 			public void actionPerformed(ActionEvent e) {
 				try {
 					retrieveValues();
-					MainWindow.addColorRunnable(TaskGenerator.getEulerPVI(null, Arrays.asList("t","x"), function, t0, x0, T, h, N, Colorizer.AwtColorTobadLogicColor(color)));
+					MainWindow.addColorRunnable(TaskGenerator.getEulerPVI(null, vars, function, t0, x0, T, h, N, Colorizer.AwtColorTobadLogicColor(color)));
 					MainWindow.drawMainWindow();
 				} catch (Exception ex) {
 					 JOptionPane.showMessageDialog(null, ex.getMessage());
@@ -164,7 +157,6 @@ final class EulerPVIPanel extends PVIComponent{
 				}
 			}
 		});
-		
 	}
 }
 
@@ -180,7 +172,7 @@ final class ImprovedEulerPVIPanel extends PVIComponent{
 			public void actionPerformed(ActionEvent e) {
 				try {
 					retrieveValues();
-					MainWindow.addColorRunnable(TaskGenerator.getImprovedEulerPVI(null, Arrays.asList("t","x"), function, t0, x0, T, h, N, Colorizer.AwtColorTobadLogicColor(color)));
+					MainWindow.addColorRunnable(TaskGenerator.getImprovedEulerPVI(null, vars, function, t0, x0, T, h, N, Colorizer.AwtColorTobadLogicColor(color)));
 					MainWindow.drawMainWindow();
 				} catch (Exception ex) {
 					 JOptionPane.showMessageDialog(null, ex.getMessage());
@@ -188,7 +180,6 @@ final class ImprovedEulerPVIPanel extends PVIComponent{
 				}
 			}
 		});
-		
 	}
 }
 
@@ -204,7 +195,7 @@ final class RungeKuttaPVIPanel extends PVIComponent{
 			public void actionPerformed(ActionEvent e) {
 				try {
 					retrieveValues();
-					MainWindow.addColorRunnable(TaskGenerator.getRungeKuttaPVI(null, Arrays.asList("t","x"), function, t0, x0, T, h, N, Colorizer.AwtColorTobadLogicColor(color)));
+					MainWindow.addColorRunnable(TaskGenerator.getRungeKuttaPVI(null, vars, function, t0, x0, T, h, N, Colorizer.AwtColorTobadLogicColor(color)));
 					MainWindow.drawMainWindow();
 				} catch (Exception ex) {
 					 JOptionPane.showMessageDialog(null, ex.getMessage());
@@ -212,6 +203,5 @@ final class RungeKuttaPVIPanel extends PVIComponent{
 				}
 			}
 		});
-		
 	}
 }

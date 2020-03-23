@@ -45,6 +45,16 @@ public class MenuBar {
 		JMenu addGraphMenu;  
 		
 		addGraphMenu=new JMenu("Agregar grafico");
+		
+		JMenuItem addSimpleFunction= new JMenuItem("Funcion Simple");
+		addSimpleFunction.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					MainWindow.drawMainWindow(SimpleFunctionComponent.getSimpleFunctionWindow().getComponent());
+				}
+			});
+		
+		addGraphMenu.add(addSimpleFunction);
 		addGraphMenu.add(getAddGraphPVISubMenu());
 		addGraphMenu.add(getAddGraphINSubMenu());
 	    
@@ -60,7 +70,7 @@ public class MenuBar {
 	    pviEuler.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				MainWindow.drawMainWindow(PVIComponent.getEulerPVI().getPVIWindow());
+				MainWindow.drawMainWindow(PVIComponent.getEulerPVI().getComponent());
 			}
 		});
 	    
@@ -68,7 +78,7 @@ public class MenuBar {
 	    pviEulerMej.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				MainWindow.drawMainWindow(PVIComponent.getImprovedEulerPVI().getPVIWindow());
+				MainWindow.drawMainWindow(PVIComponent.getImprovedEulerPVI().getComponent());
 			}
 		});
 	    
@@ -76,7 +86,7 @@ public class MenuBar {
 	    pviRungeKutta.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				MainWindow.drawMainWindow(PVIComponent.getRungeKuttaEulerPVI().getPVIWindow());
+				MainWindow.drawMainWindow(PVIComponent.getRungeKuttaEulerPVI().getComponent());
 			}
 		});
 	    

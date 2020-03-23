@@ -49,7 +49,7 @@ public class MainWindow{
 		
 		List<String> eulerVars=Arrays.asList("t","x");
 		
-		jobs.add(TaskGenerator.getSimpleFunctionTask(null, vars, functionA, pixelsPerPoint, Color.GREEN));
+		jobs.add(TaskGenerator.getSimpleFunctionTask(null, vars, functionA, 0, Color.GREEN));
 		jobs.add(TaskGenerator.getEulerPVI(null, eulerVars, derivatedfunctionA, 0F, 0F, 4F, 0.25F, null, Color.BLUE));
 	}
 	
@@ -151,8 +151,8 @@ public class MainWindow{
         });
     }
     
-    public static void setUIFont (javax.swing.plaf.FontUIResource f){
-        java.util.Enumeration keys = UIManager.getDefaults().keys();
+    private static void setUIFont (javax.swing.plaf.FontUIResource f){
+        java.util.Enumeration<?> keys = UIManager.getDefaults().keys();
         while (keys.hasMoreElements()) {
           Object key = keys.nextElement();
           Object value = UIManager.get (key);

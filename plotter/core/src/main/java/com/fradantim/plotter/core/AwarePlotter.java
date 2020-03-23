@@ -2,7 +2,6 @@ package com.fradantim.plotter.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;

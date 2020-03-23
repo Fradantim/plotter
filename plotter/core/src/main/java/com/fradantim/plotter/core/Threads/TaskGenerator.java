@@ -1,18 +1,14 @@
 package com.fradantim.plotter.core.Threads;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.swing.JLabel;
 
 import com.badlogic.gdx.graphics.Color;
 import com.fradantim.plotter.core.Plotter;
 import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.RenderizableComponent;
-import com.fradantim.plotter.core.processor.FunctionProcessor;
 import com.fradantim.plotter.core.processor.EulerPVIProcessor;
+import com.fradantim.plotter.core.processor.FunctionProcessor;
 import com.fradantim.plotter.core.processor.ImprovedEulerPVIProcessor;
 import com.fradantim.plotter.core.processor.PVIProcessor;
 import com.fradantim.plotter.core.processor.RungeKuttaPVIProcessor;
@@ -24,20 +20,20 @@ public class TaskGenerator {
 		return new SimplePipeTask(plotter, renderizable);
 	}
 
-	public static ColorRunnable getSimpleFunctionTask(Plotter plotter, List<String> vars, String function, Integer pixelsPerPoint) {
-		return new SimpleFunctionTask(plotter, vars, function, pixelsPerPoint, null, null);
+	public static ColorRunnable getSimpleFunctionTask(Plotter plotter, List<String> vars, String function) {
+		return new SimpleFunctionTask(plotter, vars, function, null, null);
 	}
 	
-	public static ColorRunnable getSimpleFunctionTask(Plotter plotter, List<String> vars, String function, Integer pixelsPerPoint, Color color) {
-		return new SimpleFunctionTask(plotter, vars, function, pixelsPerPoint, null, color);
+	public static ColorRunnable getSimpleFunctionTask(Plotter plotter, List<String> vars, String function, Color color) {
+		return new SimpleFunctionTask(plotter, vars, function, null, color);
 	}
 	
-	public static ColorRunnable getSimpleFunctionTask(Plotter plotter, List<String> vars, String function, Integer pixelsPerPoint, Integer derivationTimes) {
-		return new SimpleFunctionTask(plotter, vars, function, pixelsPerPoint, derivationTimes, null);
+	public static ColorRunnable getSimpleFunctionTask(Plotter plotter, List<String> vars, String function, Integer derivationTimes) {
+		return new SimpleFunctionTask(plotter, vars, function, derivationTimes, null);
 	}
 	
-	public static ColorRunnable getSimpleFunctionTask(Plotter plotter, List<String> vars, String function, Integer pixelsPerPoint, Integer derivationTimes, Color color) {
-		return new SimpleFunctionTask(plotter, vars, function, pixelsPerPoint, derivationTimes, color);
+	public static ColorRunnable getSimpleFunctionTask(Plotter plotter, List<String> vars, String function, Integer derivationTimes, Color color) {
+		return new SimpleFunctionTask(plotter, vars, function, derivationTimes, color);
 	}
 	
 	public static ColorRunnable getEulerPVI(Plotter plotter, List<String> vars, String derivatedFunction, Float t0, Float x0, Float T, Float h, Integer N) {
@@ -75,7 +71,7 @@ final class SimplePipeTask implements ColorRunnable{
 	}
 
 	@Override
-	public void run() {
+	public void innerRun() {
 		plotter.addRenderizables(Arrays.asList(renderizable));
 	}
 
@@ -94,16 +90,14 @@ final class SimpleFunctionTask implements ColorRunnable{
 	private Plotter plotter;
 	private List<String> vars;
 	private String function;
-	private Integer pixelsPerPoint;
 	private Integer derivationTimes;
 	private Color color;
 	private String name;
 	
-	public SimpleFunctionTask(Plotter plotter, List<String> vars, String function, Integer pixelsPerPoint, Integer derivationTimes, Color color) {
+	public SimpleFunctionTask(Plotter plotter, List<String> vars, String function, Integer derivationTimes, Color color) {
 		this.plotter = plotter;
 		this.vars = vars;
 		this.function = function;
-		this.pixelsPerPoint = pixelsPerPoint;
 		this.derivationTimes = derivationTimes!=null ? derivationTimes : 0;
 		this.color = color!=null ? color : Colorizer.DEFAULT_COLOR;
 		name="<html>F : <b>f("+String.join(",", vars)+")</b>=";
@@ -119,10 +113,10 @@ final class SimpleFunctionTask implements ColorRunnable{
 	}
 
 	@Override
-	public void run() {
+	public void innerRun() {
 		plotter.addRenderizables(
 				new RenderizableComponent(
-						Colorizer.colorize(FunctionProcessor.getImage(vars, function, plotter.getDomainByVar(vars), pixelsPerPoint,derivationTimes), color),
+						Colorizer.colorize(FunctionProcessor.getImage(vars, function, plotter.getDomainByVar(vars), plotter.getPixelsPerPoint(),derivationTimes), color),
 						color, 
 						name.replaceAll("<[a-z]*>", "").replaceAll("</[a-z]*>", "")
 						)
@@ -173,7 +167,7 @@ abstract class PVITask implements ColorRunnable{
 	}
 	
 	@Override
-	public void run() {
+	public void innerRun() {
 		plotter.addRenderizables(
 				new RenderizableComponent(
 						Colorizer.colorize(pviProcessor.getImage(),color),

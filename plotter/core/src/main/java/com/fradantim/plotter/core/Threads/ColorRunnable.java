@@ -12,4 +12,14 @@ public interface ColorRunnable extends Runnable{
 	public default String getFormattedName() {
 		return toString();
 	}
+	
+	public void innerRun();
+	
+	public default void run() {
+		try {
+			innerRun();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
