@@ -36,7 +36,7 @@ public class FileSystemUtil {
 		
 		public void changeValue(Object newValue) {
 			currentValue=newValue;
-			fillPropertiesFile();
+			fillPropertiesFile(false);
 		}
 		
 		public Object getCurrentValue() {
@@ -51,10 +51,10 @@ public class FileSystemUtil {
 		}
 	}
 	
-	private static void fillPropertiesFile() {
+	private static void fillPropertiesFile(Boolean forceDefaultValue) {
 		List<SimpleProperty> properties = new ArrayList<>();
 		for(AppProperty appProperty: AppProperty.values()) {
-			SimpleProperty property = new SimpleProperty(appProperty.propertyName, appProperty.getCurrentValue());
+			SimpleProperty property = new SimpleProperty(appProperty.propertyName, forceDefaultValue? appProperty.defaultValue : appProperty.getCurrentValue());
 			properties.add(property);
 		}
 		
@@ -63,21 +63,21 @@ public class FileSystemUtil {
 	
 	private static void fillPropertiesValues() {
 		if(! getFile(PROPERTIES_FILE).exists()) {
-			fillPropertiesFile();
-		} else {
-			List<SimpleProperty> storedProperties = load(PROPERTIES_FILE);
+			fillPropertiesFile(true);
+		} 
+
+		List<SimpleProperty> storedProperties = load(PROPERTIES_FILE);
 			
-			for(SimpleProperty storedProperty : storedProperties) {
-				try {
-					AppProperty property = AppProperty.getAppProperty(storedProperty.name);
-					property.currentValue = storedProperty.value;
-				} catch (IllegalArgumentException e) {}
-			}
-			
-			for(AppProperty appProperty : AppProperty.values()) {
-				if(appProperty.currentValue ==null) {
-					appProperty.currentValue=appProperty.defaultValue;					
-				}
+		for(SimpleProperty storedProperty : storedProperties) {
+			try {
+				AppProperty property = AppProperty.getAppProperty(storedProperty.name);
+				property.currentValue = storedProperty.value;
+			} catch (IllegalArgumentException e) {}
+		}
+		
+		for(AppProperty appProperty : AppProperty.values()) {
+			if(appProperty.currentValue ==null) {
+				appProperty.currentValue=appProperty.defaultValue;					
 			}
 		}
 	}
@@ -96,14 +96,17 @@ public class FileSystemUtil {
 		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 		
 		//create folders if those don't exist
-		for(String folder : Arrays.asList(ROOT_FOLDER, SCREENSHOTS_FOLDER, LOGS_FOLDER)) {
-			File folderFile= getFile(folder);
-			if(!folderFile.exists()) {
-				createFolder(folderFile);
+		if(! getFile(ROOT_FOLDER).exists()) {
+			for(String folder : Arrays.asList(ROOT_FOLDER, SCREENSHOTS_FOLDER, LOGS_FOLDER)) {
+				File folderFile= getFile(folder);
+				if(!folderFile.exists()) {
+					createFolder(folderFile);
+				}
 			}
-		}
-		
-		fillPropertiesValues();
+			fillPropertiesFile(true);
+		} else {
+			fillPropertiesValues();
+		}			
 	}
 	
 	private static void createFolder(File folder) {
