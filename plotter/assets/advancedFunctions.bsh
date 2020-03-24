@@ -1,7 +1,10 @@
 //constantes
 
 pi=Math.PI;
+PI=pi;
+
 e=Math.E;
+E=e;
 
 //funciones
 

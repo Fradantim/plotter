@@ -67,14 +67,14 @@ public abstract class Plotter implements ApplicationListener {
 	protected Plotter(boolean fullScreen) {
 		this.fullScreen=fullScreen;
 	}
-	public Plotter() { }
-	
-	@Override
-	public void create () {
+	public Plotter() {
 		int corePoolSize = Runtime.getRuntime().availableProcessors();
 		corePoolSize = corePoolSize<=1 ? corePoolSize : corePoolSize-1;
 		service = Executors.newFixedThreadPool(corePoolSize);
-		
+	}
+	
+	@Override
+	public void create () {
 		batch = new SpriteBatch();
 		Gdx.gl.glLineWidth(PIXEL_LINE_WIDTH);
 		shapeRenderer = new ShapeRenderer(); //necesito inicializacion tardia
@@ -122,13 +122,14 @@ public abstract class Plotter implements ApplicationListener {
 	
 	public abstract void addRenderizables(RenderizableComponent component);
 	
-	public void addColorRunnables(List<ColorRunnable> runnables) {
-		runnables.forEach(r -> {
-			r.setPlotter(this);
-			service.submit(r);
-		});		
+	public void addColorRunnable(ColorRunnable runnable) {
+		runnable.setPlotter(this);
+		service.submit(runnable);
 	}
 	
+	public void addColorRunnables(List<ColorRunnable> runnables) {
+		runnables.forEach(r -> addColorRunnable(r));		
+	}	
 	
 	@Override
 	public void dispose () {

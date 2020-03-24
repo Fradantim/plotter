@@ -40,9 +40,14 @@ public class FileSystemUtil {
 		}
 		
 		public Object getCurrentValue() {
-			if(currentValue== null)
-				currentValue=defaultValue;
+			if(currentValue== null) {
+				fillPropertiesValues();
+			}
 			return currentValue;
+		}
+		
+		public static AppProperty getAppProperty(String name) {
+			return Arrays.stream(values()).filter(p-> p.propertyName.equals(name)).findFirst().get();
 		}
 	}
 	
@@ -64,9 +69,15 @@ public class FileSystemUtil {
 			
 			for(SimpleProperty storedProperty : storedProperties) {
 				try {
-					AppProperty property = AppProperty.valueOf(storedProperty.name);
+					AppProperty property = AppProperty.getAppProperty(storedProperty.name);
 					property.currentValue = storedProperty.value;
 				} catch (IllegalArgumentException e) {}
+			}
+			
+			for(AppProperty appProperty : AppProperty.values()) {
+				if(appProperty.currentValue ==null) {
+					appProperty.currentValue=appProperty.defaultValue;					
+				}
 			}
 		}
 	}

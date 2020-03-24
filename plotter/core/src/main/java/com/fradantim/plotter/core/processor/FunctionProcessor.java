@@ -1,6 +1,8 @@
 package com.fradantim.plotter.core.processor;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,16 +16,16 @@ import com.fradantim.plotter.core.renderizable.Point;
 import bsh.EvalError;
 import bsh.Interpreter;
 
+
 public class FunctionProcessor {
 	
 	public enum RenderType{ POINT, LINE, BOTH; }
 	
 	public static Interpreter getInterpreter() {
-		try {
-			Interpreter interpreter = new Interpreter();
-			interpreter.source("advancedFunctions.bsh");
-			return interpreter;
-		} catch (IOException | EvalError e) {
+		try (Reader script = new InputStreamReader(FunctionProcessor.class.getClassLoader().getResourceAsStream("advancedFunctions.bsh"));){
+			Interpreter in = new Interpreter(script, System.out, System.err, false);
+			return in;
+		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}
 	}
