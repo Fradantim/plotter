@@ -1,4 +1,4 @@
-package com.fradantim.plotter.core;
+package com.fradantim.plotter.core.renderizable;
 
 import com.badlogic.gdx.math.Vector2;
 

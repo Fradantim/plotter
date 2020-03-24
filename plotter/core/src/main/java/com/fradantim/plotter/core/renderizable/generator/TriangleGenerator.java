@@ -6,6 +6,11 @@ import com.fradantim.plotter.core.renderizable.Triangle;
 import com.fradantim.plotter.core.util.Direction;
 
 public class TriangleGenerator {
+	
+	public static Triangle simpleTriangle(Vector2 head, Direction direction, int triangleSide) {
+		return simpleTriangle(head, direction, triangleSide, Colorizer.DEFAULT_COLOR);
+	}
+	
 	public static Triangle simpleTriangle(Vector2 head, Direction direction, int triangleSide, Color color) {
 		switch (direction){
 			case UP: return new Triangle(head,
@@ -27,6 +32,10 @@ public class TriangleGenerator {
 					color);
 			default: return null;
 		}
+	}
+	
+	public static Triangle simpleTriangle(Vector2 pointA, Vector2 pointB, Vector2 pointC) {
+		return simpleTriangle(pointA, pointB, pointC, Colorizer.DEFAULT_COLOR);
 	}
 	
 	public static Triangle simpleTriangle(Vector2 pointA, Vector2 pointB, Vector2 pointC, Color color) {

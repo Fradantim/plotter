@@ -1,8 +1,6 @@
 package com.fradantim.plotter.core.processor;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -18,24 +16,19 @@ import com.fradantim.plotter.core.renderizable.Renderizable;
         @JsonSubTypes.Type(value = ImprovedEulerPVIProcessor.class),
         @JsonSubTypes.Type(value = RungeKuttaPVIProcessor.class)
 })
-public abstract class PVIProcessor {
+public abstract class INProcessor {
 	
 	protected List<String> vars;
 	protected String function;
-	protected Float t0, x0, T, h;
+	protected Float a,b,h;
 	protected Integer N;
 	
 	protected String toString;
 	
-	@JsonIgnore
-	protected Map<Float, Float> memory;
-	
-	public PVIProcessor() {
-		memory= new HashMap<>();
-	}
+	public INProcessor() {	}
 	
 	@SuppressWarnings("deprecation")
-	public PVIProcessor(List<String> vars, String function, Float t0, Float x0, Float T, Float h, Integer N) {
+	public INProcessor(List<String> vars, String function, Float a, Float b, Float h, Integer N) {
 		this();
 		if(h==null && N == null) {
 			throw new IllegalArgumentException("h and N where both null, at least on of those needs to have a value.");
@@ -43,20 +36,19 @@ public abstract class PVIProcessor {
 		
 		this.vars=vars;
 		this.function=function;
-		this.t0=t0;
-		this.x0=x0;
-		this.T=T;
+		this.a=a;
+		this.b=b;
 		this.h=h;
 		this.N=N;
 		
-		toString=getName()+": f("+String.join(",", vars)+")="+function+"; t0="+t0+"; x0="+x0+"; T="+T;
+		toString=getName()+": f("+String.join(",", vars)+")="+function+"; a="+a+"; b="+b;
 		
 		if(N==null) {
 			toString+="; h="+h;
-			this.N=new Float(Math.abs(Math.ceil((T-t0)/h))).intValue();
+			this.N=new Float(Math.abs(Math.ceil((b-a)/h))).intValue();
 		}else {
 			toString+="; N="+N;
-			this.h=new Float(Math.abs(Math.ceil((T-t0)/N)));
+			this.h=new Float(Math.abs(Math.ceil((b-a)/N)));
 		}
 	}
 	
@@ -64,7 +56,7 @@ public abstract class PVIProcessor {
 	public abstract String getName();
 	
 	@JsonIgnore
-	public abstract List<Renderizable> getImage();
+	public abstract List<? extends Renderizable> getImage();
 	
 	@Override
 	public String toString() {
@@ -79,18 +71,6 @@ public abstract class PVIProcessor {
 		return function;
 	}
 
-	public Float getT0() {
-		return t0;
-	}
-
-	public Float getX0() {
-		return x0;
-	}
-
-	public Float getT() {
-		return T;
-	}
-
 	public Float getH() {
 		return h;
 	}
@@ -98,5 +78,15 @@ public abstract class PVIProcessor {
 	public Integer getN() {
 		return N;
 	}
+	
+	public Float getA() {
+		return a;
+	}
+
+	public Float getB() {
+		return b;
+	}
+
+	public abstract Double getArea();
 }
 

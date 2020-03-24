@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
-import com.fradantim.plotter.core.Renderizable;
+import com.fradantim.plotter.core.renderizable.Renderizable;
 import com.fradantim.plotter.core.util.FileSystemUtil.AppProperty;
 
 public class Colorizer {

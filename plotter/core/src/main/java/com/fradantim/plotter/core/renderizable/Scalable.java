@@ -1,4 +1,4 @@
-package com.fradantim.plotter.core;
+package com.fradantim.plotter.core.renderizable;
 
 public interface Scalable {
 	

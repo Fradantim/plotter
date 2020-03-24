@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.renderizable.Line;
+import com.fradantim.plotter.core.renderizable.Renderizable;
 import com.fradantim.plotter.core.util.Direction;
 
 public class AxisGenerator {

@@ -6,13 +6,15 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Color;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fradantim.plotter.core.Plotter;
-import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.RenderizableComponent;
 import com.fradantim.plotter.core.processor.EulerPVIProcessor;
 import com.fradantim.plotter.core.processor.FunctionProcessor;
+import com.fradantim.plotter.core.processor.INProcessor;
 import com.fradantim.plotter.core.processor.ImprovedEulerPVIProcessor;
 import com.fradantim.plotter.core.processor.PVIProcessor;
 import com.fradantim.plotter.core.processor.RungeKuttaPVIProcessor;
+import com.fradantim.plotter.core.processor.TrapezoidsINProcesor;
+import com.fradantim.plotter.core.renderizable.Renderizable;
 import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 
 public class TaskGenerator {
@@ -60,6 +62,10 @@ public class TaskGenerator {
 	public static ColorRunnable getRungeKuttaPVI(Plotter plotter, List<String> vars, String derivatedFunction, Float t0, Float x0, Float T, Float h, Integer N, Color color) {
 		return new RungeKuttaPVITask(plotter, vars, derivatedFunction, t0, x0, T, h, N, color);
 	}
+	
+	public static ColorRunnable getTrapezoidsIN(Plotter plotter, List<String> vars, String function, Float a, Float b, Float h, Integer N, Color color) {
+		return new TrapezoidsINTask(plotter, vars, function, a, b, h, N, color);
+	}
 }
 
 abstract class Graphicable implements ColorRunnable{
@@ -99,7 +105,13 @@ final class SimplePipeTask extends Graphicable{
 
 	@Override
 	public void innerRun() {
-		plotter.addRenderizables(Arrays.asList(renderizable));
+		plotter.addRenderizables(
+				new RenderizableComponent(
+						Arrays.asList(renderizable),
+						color, 
+						renderizable.toString()
+						)
+				);
 	}
 }
 
@@ -217,5 +229,53 @@ final class RungeKuttaPVITask extends PVITask{
 	
 	public RungeKuttaPVITask(Plotter plotter, List<String> vars, String derivatedFunction, Float t0, Float x0, Float T, Float h, Integer N, Color color) {
 		super(new RungeKuttaPVIProcessor(vars, derivatedFunction, t0, x0, T, h, N), plotter, color);
+	}
+}
+
+
+abstract class INTask extends Graphicable{
+	protected INProcessor inProcessor;
+	protected String name;
+	
+	/** empty constructor for serialization*/
+	public INTask() {}
+	
+	public INTask(INProcessor inProcessor, Plotter plotter, Color color) {
+		super(plotter,color);
+		this.inProcessor=inProcessor;
+		name="<html>"+inProcessor.getName()+": "
+				+"<b>f("+String.join(",", inProcessor.getVars())+")</b>="+inProcessor.getFunction()+"; "
+				+ "<b>a</b>= "+inProcessor.getA()+"; "
+				+ "<b>b</b>= "+inProcessor.getB()+"; "
+				+ "<b>h</b>="+inProcessor.getH()+"; "
+				+ "<b>N</b>="+inProcessor.getN()
+				+ "</html>";
+	}
+	
+	@Override
+	public void innerRun() {
+		plotter.addRenderizables(
+				new RenderizableComponent(
+						Colorizer.colorize(inProcessor.getImage(),color),
+						color, 
+						inProcessor.toString()
+						)
+				);
+	}
+	
+	@Override
+	public String getFormattedName() {
+		return name;
+	}
+}
+
+
+final class TrapezoidsINTask extends INTask{
+	
+	/** empty constructor for serialization*/
+	public TrapezoidsINTask() {}
+	
+	public TrapezoidsINTask(Plotter plotter, List<String> vars, String derivatedFunction, Float a, Float b, Float h, Integer N, Color color) {
+		super(new TrapezoidsINProcesor(vars, derivatedFunction, a, b, h, N), plotter, color);
 	}
 }

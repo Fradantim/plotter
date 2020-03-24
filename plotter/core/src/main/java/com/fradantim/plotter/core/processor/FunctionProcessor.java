@@ -1,5 +1,6 @@
 package com.fradantim.plotter.core.processor;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -8,10 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
-import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.renderizable.Line;
 import com.fradantim.plotter.core.renderizable.Point;
+import com.fradantim.plotter.core.renderizable.Renderizable;
 
 import bsh.EvalError;
 import bsh.Interpreter;
@@ -22,10 +25,11 @@ public class FunctionProcessor {
 	public enum RenderType{ POINT, LINE, BOTH; }
 	
 	public static Interpreter getInterpreter() {
-		try (Reader script = new InputStreamReader(FunctionProcessor.class.getClassLoader().getResourceAsStream("advancedFunctions.bsh"));){
-			Interpreter in = new Interpreter(script, System.out, System.err, false);
+		try {
+			InnerInterpreter in = new InnerInterpreter();
+			in.source(Gdx.files.internal("advancedFunctions.bsh"));
 			return in;
-		} catch (IOException e) {
+		} catch (IOException |EvalError e) {
 			throw new IllegalArgumentException(e);
 		}
 	}
@@ -73,8 +77,13 @@ public class FunctionProcessor {
 			interpreter.eval("resultado = "+function);
 			
 			Object resObj = interpreter.get("resultado");
-			if(resObj !=null)
-				return new Double(resObj.toString());
+			if(resObj !=null) {
+				Double d = new Double(resObj.toString());
+				if (!d.isNaN() && !d.isInfinite()) {
+					return d;
+				}
+			}
+				
 			return null;
 		} catch (EvalError e) {
 			throw new RuntimeException(e);
@@ -159,5 +168,21 @@ public class FunctionProcessor {
 
 	private static boolean pointsAreContinuous(Point pointA, Point pointB, Integer pointsPerPoints) {
 		return Math.abs(pointA.getPoint().x-pointB.getPoint().x)<1.01F/pointsPerPoints;
+	}
+}
+
+final class InnerInterpreter extends Interpreter{
+	
+	private static final long serialVersionUID = 1L;
+
+	public Object source(FileHandle file) throws IOException, EvalError{
+		if ( Interpreter.DEBUG ) debug("Sourcing file: "+file);
+			
+		Reader sourceIn = new BufferedReader(new InputStreamReader(file.read()));
+		try {
+			return eval( sourceIn, getNameSpace(), "nono" );
+		} finally {
+			sourceIn.close();
+		}
 	}
 }

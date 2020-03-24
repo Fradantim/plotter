@@ -3,6 +3,7 @@ package com.fradantim.plotter.core;
 import java.util.Collection;
 
 import com.badlogic.gdx.graphics.Color;
+import com.fradantim.plotter.core.renderizable.Renderizable;
 
 public class RenderizableComponent{
 	

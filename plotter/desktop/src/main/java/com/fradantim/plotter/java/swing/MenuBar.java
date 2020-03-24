@@ -137,6 +137,13 @@ public class MenuBar {
 		
 		subMenuIN=new JMenu("Integracion Numerica");
 		inTrapecios=new JMenuItem("Trapecio");  
+		inTrapecios.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				MainWindow.drawMainWindow(INComponent.getTrapezoidsIN().getComponent());
+			}
+		});
+		
 		inMonteCarlo=new JMenuItem("MonteCarlo");
 		
 		subMenuIN.add(inTrapecios);

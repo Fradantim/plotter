@@ -7,6 +7,7 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Rectangle;
+import com.fradantim.plotter.core.renderizable.Renderizable;
 import com.fradantim.plotter.core.renderizable.generator.AxisGenerator;
 
 /** An implementation of Plotter which keeps it's Renderizables in memory and refreshes the screen */

@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.math.Vector2;
-import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.renderizable.Line;
+import com.fradantim.plotter.core.renderizable.Renderizable;
 
 
 /**
@@ -42,7 +42,7 @@ public class ImprovedEulerPVIProcessor extends PVIProcessor{
 		memory.put(t0, x0);
 	
 		for(int i=0; i<=this.N; i++) {
-			Float t= t0+i*this.h*((t0<T)?1:-1);
+			Float t= t0+i*this.h*((t0<T)?1:-1);	
 			puntos.add(new Vector2(t, getValue(t)));
 		}
 

@@ -28,6 +28,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.fradantim.plotter.core.Threads.ColorRunnable;
+import com.fradantim.plotter.core.renderizable.Renderizable;
 import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 import com.fradantim.plotter.core.util.FileSystemUtil;
 import com.fradantim.plotter.core.util.FileSystemUtil.AppProperty;

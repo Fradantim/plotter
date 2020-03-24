@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.math.Vector2;
-import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.renderizable.Line;
+import com.fradantim.plotter.core.renderizable.Renderizable;
 
 /**
  * Supposing <i>vars</i>[0]='x' and <i>vars</i>[1]='t' <br>

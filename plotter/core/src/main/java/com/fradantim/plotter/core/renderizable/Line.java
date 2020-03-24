@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 
 public class Line implements Renderizable{
@@ -82,5 +81,18 @@ public class Line implements Renderizable{
 	@Override
 	public boolean collidesWith(Rectangle rect) {
 		return rect.contains(pointA)||rect.contains(pointB);
+	}
+	
+	
+	public Double getImage(Double x) {
+		return getM()*x+getB();
+	}
+	@SuppressWarnings("deprecation")
+	public Double getM() {
+		return new Double(pointA.y-pointB.y)/(pointA.x-pointB.x);
+	}
+	
+	public Double getB() {
+		return pointA.y/(getM()*pointA.x);
 	}
 }

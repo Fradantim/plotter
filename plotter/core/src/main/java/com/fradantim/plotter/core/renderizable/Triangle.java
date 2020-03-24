@@ -7,10 +7,9 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 
-public class Triangle implements Renderizable{
+public class Triangle implements Surface{
 
 	private Vector2 pointA;
 	private Vector2 pointB;
@@ -25,7 +24,7 @@ public class Triangle implements Renderizable{
 	}
 	
 	public Triangle(Vector2 pointA, Vector2 pointB, Vector2 pointC) {
-		this(pointA,pointB,pointC,Colorizer.DEFAULT_COLOR);
+		this(pointA, pointB, pointC, Colorizer.DEFAULT_COLOR);
 	}
 
 	@Override
@@ -42,6 +41,11 @@ public class Triangle implements Renderizable{
 		pixmap.fillTriangle((int) pointA.x, (int) pointA.y, (int) pointB.x, (int) pointB.y, (int) pointC.x, (int) pointC.y);
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName()+" A:"+pointA+", B:"+pointB+", C:"+pointC;
+	}
+	
 	public Vector2 getPointA() {
 		return pointA;
 	}
@@ -84,5 +88,22 @@ public class Triangle implements Renderizable{
 	@Override
 	public boolean collidesWith(Rectangle rect) {
 		return rect.contains(pointA)||rect.contains(pointB)||rect.contains(pointC);
-	}	
+	}
+
+	@Override
+	public Double getArea() {
+		//Heron's Formula (thank you so much)
+		Double sideAB = getSideLength(pointA, pointB);
+		Double sideBC = getSideLength(pointB, pointC);
+		Double sideCA = getSideLength(pointC, pointA);
+		
+		//the semi perimeter
+		Double semiPer= (sideAB+sideBC+sideCA)/2;
+		
+		return Math.sqrt(semiPer*(semiPer-sideAB)*(semiPer-sideBC)*(semiPer-sideCA));
+	}
+	
+	private Double getSideLength(Vector2 pointA, Vector2 pointB) {
+		return Math.sqrt(Math.pow(pointB.x-pointA.x, 2)+Math.pow(pointB.y-pointA.y, 2));
+	}
 }
