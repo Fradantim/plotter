@@ -111,7 +111,7 @@ public class FileSystemUtil {
 		    if(folder.mkdir()){
 		    	System.out.println("Created successfully "+folder);
 		    } else {
-		    	System.out.println("Couldn’t create directory "+folder);
+		    	System.out.println("Couldn't create directory "+folder);
 		    }
 	}
 		
