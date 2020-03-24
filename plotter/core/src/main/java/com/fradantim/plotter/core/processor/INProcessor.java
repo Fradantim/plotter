@@ -12,9 +12,8 @@ import com.fradantim.plotter.core.renderizable.Renderizable;
         include = JsonTypeInfo.As.PROPERTY,
         property = "type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = EulerPVIProcessor.class),
-        @JsonSubTypes.Type(value = ImprovedEulerPVIProcessor.class),
-        @JsonSubTypes.Type(value = RungeKuttaPVIProcessor.class)
+        @JsonSubTypes.Type(value = TrapezoidsINProcesor.class),
+        @JsonSubTypes.Type(value = RandomINProcesor.class)
 })
 public abstract class INProcessor {
 	
