@@ -41,23 +41,34 @@ public class TrapezoidsINProcesor extends INProcessor{
 			
 		for(int i=0; i<=this.N; i++) {
 			Float x= a+i*h*((a<b)?1:-1);
-			Vector2 punto =new Vector2(x, getValue(x)); 
-			puntos.add(punto);
-
-			Line line = new Line(new Vector2(punto.x, punto.y+delta*(punto.y>0?1:-1)), new Vector2(x, -delta*(punto.y>0?1:-1)));
-			renderizables.add(line);
+			Float value=getValue(x);
+			if(value!=null) {
+				Vector2 punto =new Vector2(x, getValue(x)); 
+				puntos.add(punto);
+				Line line = new Line(new Vector2(punto.x, punto.y+delta*(punto.y>0?1:-1)), new Vector2(x, -delta*(punto.y>0?1:-1)));
+				renderizables.add(line);
+			}
 		}
 		
 		for(int i=0; i<puntos.size()-1; i++) {
 			Vector2 pointA = puntos.get(i);
 			Vector2 pointB = puntos.get(i+1);
-			Surface s = new Quadrilateral(pointA, pointB, new Vector2(pointB.x,0), new Vector2(pointA.x,0));
-			if(pointA.y>0 && pointB.y >0) {
-				area+=s.getArea();
+			
+			Surface s=null;
+			if(pointA.y*pointB.y>0) {
+				//didn't cross the horizontal axis
+				s = new Quadrilateral(pointA, pointB, new Vector2(pointB.x,0), new Vector2(pointA.x,0));
+				if(pointA.y>0 && pointB.y >0) {
+					area+=s.getArea();
+				} else {
+					area-=s.getArea();
+				}
 			} else {
-				area-=s.getArea();
+				//did cross the horizontal axis
+				s = new Quadrilateral(pointA, new Vector2(pointA.x,0), pointB, new Vector2(pointB.x,0));
+				area+=h*(pointA.y+pointB.y)/2;
 			}
-					
+								
 			renderizables.add(s);
 		}
 		
@@ -72,7 +83,9 @@ public class TrapezoidsINProcesor extends INProcessor{
 			elementByVar.put(vars.get(i), 0F);
 		}
 		
-		return FunctionProcessor.getImageAtElement(vars, function, elementByVar).floatValue();
+		Double res=FunctionProcessor.getImageAtElement(vars, function, elementByVar);
+		
+		return res!=null?res.floatValue():null;
 	}
 
 	@Override
