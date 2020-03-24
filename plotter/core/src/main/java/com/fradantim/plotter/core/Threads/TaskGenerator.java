@@ -12,6 +12,7 @@ import com.fradantim.plotter.core.processor.FunctionProcessor;
 import com.fradantim.plotter.core.processor.INProcessor;
 import com.fradantim.plotter.core.processor.ImprovedEulerPVIProcessor;
 import com.fradantim.plotter.core.processor.PVIProcessor;
+import com.fradantim.plotter.core.processor.RandomINProcesor;
 import com.fradantim.plotter.core.processor.RungeKuttaPVIProcessor;
 import com.fradantim.plotter.core.processor.TrapezoidsINProcesor;
 import com.fradantim.plotter.core.renderizable.Renderizable;
@@ -65,6 +66,10 @@ public class TaskGenerator {
 	
 	public static ColorRunnable getTrapezoidsIN(Plotter plotter, List<String> vars, String function, Float a, Float b, Float h, Integer N, Color color) {
 		return new TrapezoidsINTask(plotter, vars, function, a, b, h, N, color);
+	}
+	
+	public static ColorRunnable getRandomIN(Plotter plotter, List<String> vars, String function, Float a, Float b, Integer N, Color color) {
+		return new RandomINTask(plotter, vars, function, a, b, N, color);
 	}
 }
 
@@ -277,5 +282,15 @@ final class TrapezoidsINTask extends INTask{
 	
 	public TrapezoidsINTask(Plotter plotter, List<String> vars, String derivatedFunction, Float a, Float b, Float h, Integer N, Color color) {
 		super(new TrapezoidsINProcesor(vars, derivatedFunction, a, b, h, N), plotter, color);
+	}
+}
+
+final class RandomINTask extends INTask{
+	
+	/** empty constructor for serialization*/
+	public RandomINTask() {}
+	
+	public RandomINTask(Plotter plotter, List<String> vars, String derivatedFunction, Float a, Float b, Integer N, Color color) {
+		super(new RandomINProcesor(vars, derivatedFunction, a, b, null, N), plotter, color);
 	}
 }

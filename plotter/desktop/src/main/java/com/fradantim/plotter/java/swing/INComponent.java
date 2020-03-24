@@ -81,6 +81,10 @@ public abstract class INComponent implements ComponentGenerator{
 		return new TrapezoidsINPanel();
 	}
 	
+	public static INComponent getRandomIN() {
+		return new RandomINPanel();
+	}
+	
 	
 	
 	protected void retrieveValues(){
@@ -133,6 +137,31 @@ final class TrapezoidsINPanel extends INComponent{
 				try {
 					retrieveValues();
 					MainWindow.addColorRunnable(TaskGenerator.getTrapezoidsIN(null, vars, function, a, b, h, N, Colorizer.awtColorTobadLogicColor(color)));
+					MainWindow.drawMainWindow();
+				} catch (Exception ex) {
+					 JOptionPane.showMessageDialog(null, ex.getMessage());
+					 ex.printStackTrace();
+				}
+			}
+		});
+	}
+}
+
+final class RandomINPanel extends INComponent{
+
+	@Override
+	protected String getName() { return "Metodo inimputable.";}
+	
+	{
+		hLabel.setVisible(false);
+		hTF.setVisible(false);
+		addButon.addActionListener(new ActionListener() {
+		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					retrieveValues();
+					MainWindow.addColorRunnable(TaskGenerator.getRandomIN(null, vars, function, a, b, N, Colorizer.awtColorTobadLogicColor(color)));
 					MainWindow.drawMainWindow();
 				} catch (Exception ex) {
 					 JOptionPane.showMessageDialog(null, ex.getMessage());

@@ -15,6 +15,7 @@ public class Triangle implements Surface{
 	private Vector2 pointB;
 	private Vector2 pointC;
 	private Color color;
+	private Boolean filled=true;
 	
 	public Triangle(Vector2 pointA, Vector2 pointB, Vector2 pointC, Color color) {
 		this.pointA = new Vector2(pointA);
@@ -29,7 +30,10 @@ public class Triangle implements Surface{
 
 	@Override
 	public void render(ShapeRenderer shapeRenderer, Color color) {
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+		if(filled)
+			shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+		else
+			shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(color);
        	shapeRenderer.triangle(pointA.x, pointA.y, pointB.x, pointB.y, pointC.x, pointC.y);
         shapeRenderer.end();
@@ -105,5 +109,15 @@ public class Triangle implements Surface{
 	
 	private Double getSideLength(Vector2 pointA, Vector2 pointB) {
 		return Math.sqrt(Math.pow(pointB.x-pointA.x, 2)+Math.pow(pointB.y-pointA.y, 2));
+	}
+
+	@Override
+	public void setFilled(Boolean filled) {
+		this.filled=filled;		
+	}
+
+	@Override
+	public Boolean getFilled() {
+		return filled;
 	}
 }

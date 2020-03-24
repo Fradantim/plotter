@@ -94,7 +94,9 @@ public class AwarePlotter extends Plotter {
 			}
 		}
 		
-		components.add(component);
+		synchronized (this) {
+			components.add(component);
+		}
 		addRenderizables(component.getRenderizables());
 	}
 }

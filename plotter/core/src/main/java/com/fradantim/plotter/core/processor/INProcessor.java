@@ -18,6 +18,7 @@ import com.fradantim.plotter.core.renderizable.Renderizable;
 })
 public abstract class INProcessor {
 	
+	protected Double area=0D;	
 	protected List<String> vars;
 	protected String function;
 	protected Float a,b,h;

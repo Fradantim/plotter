@@ -14,8 +14,6 @@ import com.fradantim.plotter.core.util.FileSystemUtil.AppProperty;
 
 public class TrapezoidsINProcesor extends INProcessor{
 	
-	private Double area=0D;
-	
 	/** empty constructor for serialization*/
 	public TrapezoidsINProcesor() {
 		super();
@@ -31,7 +29,7 @@ public class TrapezoidsINProcesor extends INProcessor{
 	}
 
 	private static Integer pixelsPerPoint = (Integer) AppProperty.PLOTTER_PIXELS_PER_POINT.getCurrentValue();
-	private static Float delta= 62.5F/pixelsPerPoint;
+	private static Float delta= 125F/(pixelsPerPoint*2);
 	
 	@Override
 	public List<? extends Renderizable> getImage() {

@@ -17,6 +17,7 @@ public class Quadrilateral implements Surface{
 	private Vector2 pointC;
 	private Vector2 pointD;
 	private Color color;
+	private Boolean filled=true;
 	
 	public Quadrilateral(Vector2 pointA, Vector2 pointB, Vector2 pointC, Vector2 pointD, Color color) {
 		this.pointA = new Vector2(pointA);
@@ -32,10 +33,17 @@ public class Quadrilateral implements Surface{
 
 	@Override
 	public void render(ShapeRenderer shapeRenderer, Color color) {
-        for(Triangle t: getInnerTriangles()) {
-        	t.setColor(color);
-        	t.render(shapeRenderer);
-        }
+		if(filled) {
+			for(Triangle t: getInnerTriangles()) {
+				t.setColor(color);
+				t.render(shapeRenderer);
+			}
+		} else {
+			shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+			shapeRenderer.setColor(color);
+			shapeRenderer.polygon(new float[] {pointA.x, pointA.y, pointB.x, pointB.y, pointC.x, pointC.y, pointD.x, pointD.y});
+			shapeRenderer.end();
+		}
 	}
 	
 	@Override
@@ -153,5 +161,15 @@ public class Quadrilateral implements Surface{
 				return Arrays.asList(triACB,triADB);
 			}
 		}
+	}
+	
+	@Override
+	public void setFilled(Boolean filled) {
+		this.filled=filled;		
+	}
+
+	@Override
+	public Boolean getFilled() {
+		return filled;
 	}
 }

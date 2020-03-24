@@ -145,6 +145,12 @@ public class MenuBar {
 		});
 		
 		inMonteCarlo=new JMenuItem("MonteCarlo");
+		inMonteCarlo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				MainWindow.drawMainWindow(INComponent.getRandomIN().getComponent());
+			}
+		});
 		
 		subMenuIN.add(inTrapecios);
 		subMenuIN.add(inMonteCarlo);
