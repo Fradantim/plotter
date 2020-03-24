@@ -54,7 +54,7 @@ public abstract class INComponent implements ComponentGenerator{
 		JPanel panel = new JPanel();
 		panel.setLayout(new SizeableGridLayout(0,2));
 		panel.add(new JLabel(""));
-		panel.add(new JLabel(getName()+" Solo ingrese h o N, no ambos."));
+		panel.add(new JLabel(getName()));
 		
 		panel.add(functionLabel);
 		panel.add(functionTF);
@@ -127,7 +127,7 @@ public abstract class INComponent implements ComponentGenerator{
 final class TrapezoidsINPanel extends INComponent{
 
 	@Override
-	protected String getName() { return "Metodo por Trapezoides.";}
+	protected String getName() { return "Metodo por Trapezoides. Solo ingrese h o N, no ambos.";}
 	
 	{
 		addButon.addActionListener(new ActionListener() {
