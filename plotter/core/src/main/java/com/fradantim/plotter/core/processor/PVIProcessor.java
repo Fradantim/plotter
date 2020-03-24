@@ -1,21 +1,42 @@
 package com.fradantim.plotter.core.processor;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fradantim.plotter.core.Renderizable;
 
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.CLASS,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = EulerPVIProcessor.class),
+        @JsonSubTypes.Type(value = ImprovedEulerPVIProcessor.class),
+        @JsonSubTypes.Type(value = RungeKuttaPVIProcessor.class)
+})
 public abstract class PVIProcessor {
 	
 	protected List<String> vars;
 	protected String function;
-	@SuppressWarnings("unused")
 	protected Float t0, x0, T, h;
 	protected Integer N;
 	
 	protected String toString;
 	
+	@JsonIgnore
+	protected Map<Float, Float> memory;
+	
+	public PVIProcessor() {
+		memory= new HashMap<>();
+	}
+	
 	@SuppressWarnings("deprecation")
 	public PVIProcessor(List<String> vars, String function, Float t0, Float x0, Float T, Float h, Integer N) {
+		this();
 		if(h==null && N == null) {
 			throw new IllegalArgumentException("h and N where both null, at least on of those needs to have a value.");
 		}
@@ -39,8 +60,10 @@ public abstract class PVIProcessor {
 		}
 	}
 	
+	@JsonIgnore
 	public abstract String getName();
 	
+	@JsonIgnore
 	public abstract List<Renderizable> getImage();
 	
 	@Override

@@ -11,34 +11,15 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
 import com.fradantim.plotter.core.AwarePlotter;
 import com.fradantim.plotter.core.Plotter;
-import com.fradantim.plotter.core.Threads.ColorRunnable;
 import com.fradantim.plotter.core.Threads.TaskGenerator;
-import com.fradantim.plotter.java.swing.MainWindow;
+import com.fradantim.plotter.core.util.FileSystemUtil.AppProperty;
 
 public class PlotterDesktop {
-	
-	private static final Integer PIXELS_PER_POINT=200;
-	
-	public static void pipeline(List<ColorRunnable> runables) {
-		Plotter p = new AwarePlotter();
-		p.setPixelsPerPoint(MainWindow.pixelsPerPoint);
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(p, config);
-		
-		int corePoolSize = Runtime.getRuntime().availableProcessors();
-		corePoolSize = corePoolSize<=1 ? corePoolSize : corePoolSize-1;
-		ExecutorService service = Executors.newFixedThreadPool(corePoolSize);
-				
-		runables.forEach(r -> {
-			r.setPlotter(p);
-			service.submit(r);
-		});		
-	}
 	
 	public static void main (String[] args) {
 		Plotter p = new AwarePlotter();
 		//Plotter p = new ObliviousPlotter();
-		p.setPixelsPerPoint(PIXELS_PER_POINT);
+		p.setPixelsPerPoint((Integer) AppProperty.PLOTTER_PIXELS_PER_POINT.getCurrentValue());
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		new LwjglApplication(p, config);
 

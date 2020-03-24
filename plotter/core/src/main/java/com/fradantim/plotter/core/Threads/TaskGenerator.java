@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fradantim.plotter.core.Plotter;
 import com.fradantim.plotter.core.Renderizable;
 import com.fradantim.plotter.core.RenderizableComponent;
@@ -61,12 +62,38 @@ public class TaskGenerator {
 	}
 }
 
-final class SimplePipeTask implements ColorRunnable{
-	private Plotter plotter;
+abstract class Graphicable implements ColorRunnable{
+	@JsonIgnore
+	protected Plotter plotter;
+	protected Color color;
+
+	/** empty constructor for serialization*/
+	public Graphicable() {}
+	
+	public Graphicable(Plotter plotter, Color color) {
+		this.plotter=plotter;
+		this.color=color!=null ? color : Colorizer.DEFAULT_COLOR;
+	}
+	
+	@Override
+	public void setPlotter(Plotter p) {
+		this.plotter=p;
+	}
+	
+	@Override
+	public Color getColor() {
+		return color;
+	}
+}
+	
+final class SimplePipeTask extends Graphicable{
 	private Renderizable renderizable;
 	
+	/** empty constructor for serialization*/
+	public SimplePipeTask() {}
+	
 	public SimplePipeTask(Plotter plotter, Renderizable renderizable) {
-		this.plotter = plotter;
+		super(plotter, renderizable.getColor());
 		this.renderizable = renderizable;
 	}
 
@@ -74,32 +101,22 @@ final class SimplePipeTask implements ColorRunnable{
 	public void innerRun() {
 		plotter.addRenderizables(Arrays.asList(renderizable));
 	}
-
-	@Override
-	public Color getColor() {
-		return renderizable.getColor();
-	}
-
-	@Override
-	public void setPlotter(Plotter p) {
-		this.plotter=p;
-	}
 }
 
-final class SimpleFunctionTask implements ColorRunnable{
-	private Plotter plotter;
+final class SimpleFunctionTask extends Graphicable{
 	private List<String> vars;
 	private String function;
 	private Integer derivationTimes;
-	private Color color;
 	private String name;
 	
+	/** empty constructor for serialization*/
+	public SimpleFunctionTask() {}
+	
 	public SimpleFunctionTask(Plotter plotter, List<String> vars, String function, Integer derivationTimes, Color color) {
-		this.plotter = plotter;
+		super(plotter, color);
 		this.vars = vars;
 		this.function = function;
 		this.derivationTimes = derivationTimes!=null ? derivationTimes : 0;
-		this.color = color!=null ? color : Colorizer.DEFAULT_COLOR;
 		name="<html>F : <b>f("+String.join(",", vars)+")</b>=";
 		if(derivationTimes==null || derivationTimes==0) {
 			name+=function;
@@ -122,11 +139,6 @@ final class SimpleFunctionTask implements ColorRunnable{
 						)
 				);
 	}
-
-	@Override
-	public Color getColor() {
-		return color;
-	}
 	
 	@Override
 	public String toString() {
@@ -137,25 +149,19 @@ final class SimpleFunctionTask implements ColorRunnable{
 	public String getFormattedName() {
 		return name;
 	}
-
-	@Override
-	public void setPlotter(Plotter p) {
-		this.plotter=p;
-	}
 }
 
 
-abstract class PVITask implements ColorRunnable{
+abstract class PVITask extends Graphicable{
 	protected PVIProcessor pviProcessor;
 	protected String name;
-	protected Plotter plotter;
-	protected Color color;
+	
+	/** empty constructor for serialization*/
+	public PVITask() {}
 	
 	public PVITask(PVIProcessor pviProcessor, Plotter plotter, Color color) {
+		super(plotter,color);
 		this.pviProcessor=pviProcessor;
-		this.plotter=plotter;
-		this.color = color!=null ? color : Colorizer.DEFAULT_COLOR;
-		
 		name="<html>"+pviProcessor.getName()+": "
 				+"<b>f("+String.join(",", pviProcessor.getVars())+")</b>="+pviProcessor.getFunction()+"; "
 				+ "<b>t<sub>0</sub></b>= "+pviProcessor.getT0()+"; "
@@ -181,32 +187,34 @@ abstract class PVITask implements ColorRunnable{
 	public String getFormattedName() {
 		return name;
 	}
-	
-	@Override
-	public Color getColor() {
-		return color;
-	}
-
-	@Override
-	public void setPlotter(Plotter plotter) {
-		this.plotter=plotter;
-	}
 }
 
 
 final class EulerPVITask extends PVITask{
+	
+	/** empty constructor for serialization*/
+	public EulerPVITask() {}
+	
 	public EulerPVITask(Plotter plotter, List<String> vars, String derivatedFunction, Float t0, Float x0, Float T, Float h, Integer N, Color color) {
 		super(new EulerPVIProcessor(vars, derivatedFunction, t0, x0, T, h, N), plotter, color);
 	}
 }
 
 final class ImprovedEulerPVITask extends PVITask{
+	
+	/** empty constructor for serialization*/
+	public ImprovedEulerPVITask() {}
+	
 	public ImprovedEulerPVITask(Plotter plotter, List<String> vars, String derivatedFunction, Float t0, Float x0, Float T, Float h, Integer N, Color color) {
 		super(new ImprovedEulerPVIProcessor(vars, derivatedFunction, t0, x0, T, h, N), plotter, color);
 	}
 }
 
 final class RungeKuttaPVITask extends PVITask{
+	
+	/** empty constructor for serialization*/
+	public RungeKuttaPVITask() {}
+	
 	public RungeKuttaPVITask(Plotter plotter, List<String> vars, String derivatedFunction, Float t0, Float x0, Float T, Float h, Integer N, Color color) {
 		super(new RungeKuttaPVIProcessor(vars, derivatedFunction, t0, x0, T, h, N), plotter, color);
 	}

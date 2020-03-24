@@ -1,36 +1,44 @@
 package com.fradantim.plotter.core;
 
 import java.awt.Color;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.fradantim.plotter.core.Threads.ColorRunnable;
+import com.fradantim.plotter.core.renderizable.generator.Colorizer;
+import com.fradantim.plotter.core.util.FileSystemUtil;
+import com.fradantim.plotter.core.util.FileSystemUtil.AppProperty;
 
 public abstract class Plotter implements ApplicationListener {
 	
-	public final static Color BACKGROUND_COLOR= new Color(0, 0, 0, 0);
+	public final static Color BACKGROUND_COLOR= (Color)AppProperty.PLOTTER_BACKGROUND_COLOR.getCurrentValue();
 	
 	protected static final int MIN_FONT_SIZE=12, SIGNIFICATIVE_DECIMALS=2;
 
-	protected static final float PIXEL_LINE_WIDTH=2F;
+	protected static final float PIXEL_LINE_WIDTH=((Integer)AppProperty.PLOTTER_PIXEL_LINE_WIDTH.getCurrentValue()).floatValue();
 	
 	protected SpriteBatch batch;
 	
@@ -38,23 +46,35 @@ public abstract class Plotter implements ApplicationListener {
 	
 	protected OrthographicCamera camera;
 	
-	protected BitmapFont font;
-	
 	protected Vector2 camPos = new Vector2(0,0);
 	
 	protected Integer fontSize, pixelsPerPoint;
 
-	protected boolean fullScreen = true, firstRender=true;
+	protected boolean firstRender=true;
+	protected boolean fullScreen = (Boolean)AppProperty.PLOTTER_FULL_SCREEN.getCurrentValue();
 	
 	protected List<Float> domainPoints;
 	
 	protected List<RenderizableComponent> components = new ArrayList<>();
 	
+	private ExecutorService service;
+	
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd HHmmss");
+	
 	//PARA DEBUG
 	protected boolean debugOnScreen = true, listStadistics = true, drawGrid = true;
 	
+	protected Plotter(boolean fullScreen) {
+		this.fullScreen=fullScreen;
+	}
+	public Plotter() { }
+	
 	@Override
 	public void create () {
+		int corePoolSize = Runtime.getRuntime().availableProcessors();
+		corePoolSize = corePoolSize<=1 ? corePoolSize : corePoolSize-1;
+		service = Executors.newFixedThreadPool(corePoolSize);
+		
 		batch = new SpriteBatch();
 		Gdx.gl.glLineWidth(PIXEL_LINE_WIDTH);
 		shapeRenderer = new ShapeRenderer(); //necesito inicializacion tardia
@@ -101,6 +121,14 @@ public abstract class Plotter implements ApplicationListener {
 	public abstract void addRenderizables(Collection<? extends Renderizable> renderizables);
 	
 	public abstract void addRenderizables(RenderizableComponent component);
+	
+	public void addColorRunnables(List<ColorRunnable> runnables) {
+		runnables.forEach(r -> {
+			r.setPlotter(this);
+			service.submit(r);
+		});		
+	}
+	
 	
 	@Override
 	public void dispose () {
@@ -179,15 +207,14 @@ public abstract class Plotter implements ApplicationListener {
 	
 		if(listStadistics) {
 			String statsStr = String.join("\n",getStadistics().stream().map(Stadistic::toString).collect(Collectors.toList()));
-			font.draw(batch, statsStr, getCamTopLeft().x, getCamTopLeft().y);
+			FontUtils.getOnScreenFont(fontSize, Colorizer.DEFAULT_COLOR).draw(batch, statsStr, getCamTopLeft().x, getCamTopLeft().y);
 
 			for(int i=0; i<components.size(); i++) {
 				if(components.get(i)!=null) {
 					RenderizableComponent component = components.get(i); 
-					BitmapFont colorFont = FontUtils.getOnScreenFont(fontSize, component.getColor());
 					String key="[#"+(i+1) +"] ~> ";
-					colorFont.draw(batch, key, getCamTopLeft().x , getCamTopLeft().y-(i+getStadistics().size())*fontSize);
-					font.draw(batch,component.toString(), getCamTopLeft().x+(key.length()-3)*fontSize, getCamTopLeft().y-(i+getStadistics().size())*fontSize);
+					FontUtils.getOnScreenFont(fontSize, component.getColor()   ).draw(batch, key, getCamTopLeft().x , getCamTopLeft().y-(i+getStadistics().size())*fontSize);
+					FontUtils.getOnScreenFont(fontSize, Colorizer.DEFAULT_COLOR).draw(batch,component.toString(), getCamTopLeft().x+(key.length()-3)*fontSize, getCamTopLeft().y-(i+getStadistics().size())*fontSize);
 				}
 			}
 		}
@@ -212,13 +239,6 @@ public abstract class Plotter implements ApplicationListener {
 		return camPos;
 	}
 	
-	private BitmapFont getStadisticsFont(int oldFontSize) {
-		if(oldFontSize!=this.fontSize || font==null) {
-			font = FontUtils.getOnScreenFont(fontSize);
-		}
-		return font;
-	}
-	
 	protected Vector2 getDisplayResolution() {
 		return new Vector2(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 	}
@@ -231,12 +251,10 @@ public abstract class Plotter implements ApplicationListener {
 	}
 	
 	private void changeFontSize(boolean up) {
-		int oldFontSize=fontSize;
 		if (up)
 			fontSize++;
 		else if(fontSize>MIN_FONT_SIZE)
 			fontSize--;
-		font=getStadisticsFont(oldFontSize);
 	}
 	
 	private boolean isKeyJustPressed(int... keys) {
@@ -316,7 +334,6 @@ public abstract class Plotter implements ApplicationListener {
 	private void fillFontSize() {
 		if(fontSize==null || fontSize==0) {
 			fontSize=FontUtils.getFontSize(Gdx.graphics.getWidth()*Gdx.graphics.getHeight());
-			font =  getStadisticsFont(fontSize);
 		}
 	}
 
@@ -346,7 +363,7 @@ public abstract class Plotter implements ApplicationListener {
 
 		Pixmap pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), Pixmap.Format.RGBA8888);
 		BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
-		PixmapIO.writePNG(Gdx.files.external("mypixmap.png"), pixmap);
+		PixmapIO.writePNG(new FileHandle(FileSystemUtil.getFile(FileSystemUtil.SCREENSHOTS_FOLDER+"/"+formatter.format(LocalDateTime.now())+"_screenshot.png")), pixmap);
 		pixmap.dispose();
 	}
 }

@@ -149,7 +149,7 @@ final class EulerPVIPanel extends PVIComponent{
 			public void actionPerformed(ActionEvent e) {
 				try {
 					retrieveValues();
-					MainWindow.addColorRunnable(TaskGenerator.getEulerPVI(null, vars, function, t0, x0, T, h, N, Colorizer.AwtColorTobadLogicColor(color)));
+					MainWindow.addColorRunnable(TaskGenerator.getEulerPVI(null, vars, function, t0, x0, T, h, N, Colorizer.awtColorTobadLogicColor(color)));
 					MainWindow.drawMainWindow();
 				} catch (Exception ex) {
 					 JOptionPane.showMessageDialog(null, ex.getMessage());
@@ -172,7 +172,7 @@ final class ImprovedEulerPVIPanel extends PVIComponent{
 			public void actionPerformed(ActionEvent e) {
 				try {
 					retrieveValues();
-					MainWindow.addColorRunnable(TaskGenerator.getImprovedEulerPVI(null, vars, function, t0, x0, T, h, N, Colorizer.AwtColorTobadLogicColor(color)));
+					MainWindow.addColorRunnable(TaskGenerator.getImprovedEulerPVI(null, vars, function, t0, x0, T, h, N, Colorizer.awtColorTobadLogicColor(color)));
 					MainWindow.drawMainWindow();
 				} catch (Exception ex) {
 					 JOptionPane.showMessageDialog(null, ex.getMessage());
@@ -195,7 +195,7 @@ final class RungeKuttaPVIPanel extends PVIComponent{
 			public void actionPerformed(ActionEvent e) {
 				try {
 					retrieveValues();
-					MainWindow.addColorRunnable(TaskGenerator.getRungeKuttaPVI(null, vars, function, t0, x0, T, h, N, Colorizer.AwtColorTobadLogicColor(color)));
+					MainWindow.addColorRunnable(TaskGenerator.getRungeKuttaPVI(null, vars, function, t0, x0, T, h, N, Colorizer.awtColorTobadLogicColor(color)));
 					MainWindow.drawMainWindow();
 				} catch (Exception ex) {
 					 JOptionPane.showMessageDialog(null, ex.getMessage());

@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 
 public class FontUtils {
 	private static final int A_RES=1280*720;
@@ -25,12 +24,7 @@ public class FontUtils {
 		//System.out.println("("+totalResolution+"-"+b+")/"+m+" = "+(totalResolution-b)/m);
 		return (totalResolution-b)/m;
 	}
-	
-	
-	public static BitmapFont getOnScreenFont(int newFontSize) {
-		return getOnScreenFont(newFontSize, Colorizer.DEFAULT_COLOR);
-	}
-	
+		
 	private static Map<Color, Map<Integer, BitmapFont>> fontCache = new HashMap<Color, Map<Integer,BitmapFont>>();
 	
 	public synchronized static BitmapFont getOnScreenFont(Integer newFontSize, Color color) {

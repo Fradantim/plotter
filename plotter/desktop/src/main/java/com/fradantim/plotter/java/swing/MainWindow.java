@@ -9,7 +9,6 @@ import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -20,16 +19,13 @@ import javax.swing.JSeparator;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.badlogic.gdx.graphics.Color;
 import com.fradantim.plotter.core.Threads.ColorRunnable;
-import com.fradantim.plotter.core.Threads.TaskGenerator;
 import com.fradantim.plotter.core.renderizable.generator.Colorizer;
+import com.fradantim.plotter.core.util.FileSystemUtil;
 
 public class MainWindow{
 
 	private static final JFrame frame = new JFrame("Plotter MyS");
-	
-	public static Integer pixelsPerPoint=250;
 	
 	private static List<ColorRunnable> jobs = new ArrayList<>(); 
 	
@@ -42,7 +38,7 @@ public class MainWindow{
 	}
 	
 	static {
-		List<String> vars=Arrays.asList("t");
+		/*List<String> vars=Arrays.asList("t");
 		
 		String functionA = "p(t,2)";
 		String derivatedfunctionA = "2*t";
@@ -51,6 +47,8 @@ public class MainWindow{
 		
 		jobs.add(TaskGenerator.getSimpleFunctionTask(null, vars, functionA, 0, Color.GREEN));
 		jobs.add(TaskGenerator.getEulerPVI(null, eulerVars, derivatedfunctionA, 0F, 0F, 4F, 0.25F, null, Color.BLUE));
+		*/
+		jobs.addAll(FileSystemUtil.loadLastJobs());
 	}
 	
 	private static Component drawList() {

@@ -7,10 +7,20 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
-import com.fradantim.plotter.java.PlotterDesktop;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.fradantim.plotter.core.AwarePlotter;
+import com.fradantim.plotter.core.Plotter;
+import com.fradantim.plotter.core.util.FileSystemUtil;
+import com.fradantim.plotter.core.util.FileSystemUtil.AppProperty;
 
 public class MenuBar {
+	
+	private static final String EXIT_NOTIFICATION="<html>Recuerde. Debe presionar <b>[ESCAPE]</b> para salir del mainframe.<br> "
+			+ "<br>"
+			+ "<i>(si no se rompio algo)</i></html>";		
 
 	public static JMenuBar buildMenuBar(JFrame frame) {
 		JMenuBar menuBar=new JMenuBar(); 
@@ -25,13 +35,38 @@ public class MenuBar {
 		
 		graph=new JMenuItem("Graficar");
 		graph.addActionListener(new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				PlotterDesktop.pipeline(MainWindow.getJobs());
+				JOptionPane.showMessageDialog(null, EXIT_NOTIFICATION);
+				
+				Plotter p = new AwarePlotter();
+				p.setPixelsPerPoint((Integer)AppProperty.PLOTTER_PIXELS_PER_POINT.getCurrentValue());
+				LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+				new LwjglApplication(p, config);
+				
+				while (!p.readyToRender()) {
+					System.out.println(Thread.currentThread().getId()+": Waiting for plotter to be ready to render.");
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+				}
+				
+				p.addColorRunnables(MainWindow.getJobs());
+				
+				FileSystemUtil.saveLastJobs(MainWindow.getJobs());
 			}
 		});
 	    
 		settings=new JMenuItem("Opciones");
+		settings.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				MainWindow.drawMainWindow(SettingsComponent.getSettingsComponent().getComponent());
+			}
+		});
 		help=new JMenuItem("Ayuda");
 		
 		start.add(graph);

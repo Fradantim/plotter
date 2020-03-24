@@ -2,8 +2,8 @@ package com.fradantim.plotter.core.renderizable.generator;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import com.fradantim.plotter.core.enumerators.Direction;
 import com.fradantim.plotter.core.renderizable.Triangle;
+import com.fradantim.plotter.core.util.Direction;
 
 public class TriangleGenerator {
 	public static Triangle simpleTriangle(Vector2 head, Direction direction, int triangleSide, Color color) {

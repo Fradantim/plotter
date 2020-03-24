@@ -49,7 +49,7 @@ public class SimpleFunctionComponent implements ComponentGenerator{
 			public void actionPerformed(ActionEvent e) {
 				try {
 					retrieveValues();
-					MainWindow.addColorRunnable(TaskGenerator.getSimpleFunctionTask(null, vars, function, derivations, Colorizer.AwtColorTobadLogicColor(color)));
+					MainWindow.addColorRunnable(TaskGenerator.getSimpleFunctionTask(null, vars, function, derivations, Colorizer.awtColorTobadLogicColor(color)));
 					MainWindow.drawMainWindow();
 				} catch (Exception ex) {
 					 JOptionPane.showMessageDialog(null, ex.getMessage());

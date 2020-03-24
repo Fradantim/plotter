@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
 import com.fradantim.plotter.core.Renderizable;
+import com.fradantim.plotter.core.util.FileSystemUtil.AppProperty;
 
 public class Colorizer {
 	
@@ -32,7 +33,7 @@ public class Colorizer {
 		Colorizer.getSimpleAwtColors().toArray(simpleAwtColorsArray);
 	}
 			
-	public static final Color DEFAULT_COLOR= Color.WHITE;
+	public static final Color DEFAULT_COLOR= awtColorTobadLogicColor((java.awt.Color)AppProperty.COLORIZER_DEFAULT_COLOR.getCurrentValue());
 
 	public static Renderizable colorize(Renderizable renderizable, Color color) {
 		renderizable.setColor(color);
@@ -90,7 +91,7 @@ public class Colorizer {
 		return new java.awt.Color(c.r, c.g, c.b, c.a);
 	}
 	
-	public static Color AwtColorTobadLogicColor(java.awt.Color c){
+	public static Color awtColorTobadLogicColor(java.awt.Color c){
 		return new Color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
 	}
 }

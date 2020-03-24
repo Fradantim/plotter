@@ -23,19 +23,22 @@ import com.fradantim.plotter.core.renderizable.Line;
  */
 public class EulerPVIProcessor extends PVIProcessor{
 
+	/** empty constructor for serialization*/
+	public EulerPVIProcessor() {
+		super();
+	}
+	
 	public EulerPVIProcessor(List<String> vars, String function, Float t0, Float x0, Float T, Float h, Integer N) {
 		super(vars, function, t0, x0, T, h, N);
 	}
-
-	private Map<Float, Float> memory;
 	
 	@Override
 	public List<Renderizable> getImage() {
-		memory= new HashMap<>();
-		memory.put(t0, x0);
 		List<Renderizable> result = new ArrayList<Renderizable>();
-
+		
 		List<Vector2> puntos= new ArrayList<>();
+		
+		memory.put(t0, x0);
 			
 		for(int i=0; i<=this.N; i++) {
 			Float t= t0+i*this.h*((t0<T)?1:-1);

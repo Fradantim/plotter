@@ -14,6 +14,13 @@ public class AwarePlotter extends Plotter {
 	
 	private List<Renderizable> renderizables = new ArrayList<>();
 	private Rectangle rectangleOverScreen;
+	
+	public AwarePlotter() { }
+	
+	public AwarePlotter(boolean fullScreen) {
+		super(fullScreen);
+	}
+
 	@Override
 	protected void afterCreate() {
 		renderizables.addAll(AxisGenerator.getAxis(getDisplayResolution(),pixelsPerPoint));
