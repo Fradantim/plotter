@@ -36,7 +36,6 @@ public class TrapezoidsINProcesor extends INProcessor{
 		List<Renderizable> renderizables = new ArrayList<>();
 		
 		List<Vector2> puntos= new ArrayList<>();
-			
 		for(int i=0; i<=this.N; i++) {
 			Float x= a+i*h*((a<b)?1:-1);
 			Float value=getValue(x);

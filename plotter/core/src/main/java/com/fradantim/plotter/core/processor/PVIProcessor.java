@@ -56,7 +56,7 @@ public abstract class PVIProcessor {
 			this.N=new Float(Math.abs(Math.ceil((T-t0)/h))).intValue();
 		}else {
 			toString+="; N="+N;
-			this.h=new Float(Math.abs(Math.ceil((T-t0)/N)));
+			this.h=new Float(Math.abs((T-t0)/N));
 		}
 	}
 	

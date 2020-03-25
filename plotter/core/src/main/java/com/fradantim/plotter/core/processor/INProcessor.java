@@ -48,7 +48,7 @@ public abstract class INProcessor {
 			this.N=new Float(Math.abs(Math.ceil((b-a)/h))).intValue();
 		}else {
 			toString+="; N="+N;
-			this.h=new Float(Math.abs(Math.ceil((b-a)/N)));
+			this.h=new Float(Math.abs((b-a)/N));
 		}
 	}
 	
