@@ -151,28 +151,16 @@ public class FileSystemUtil {
 	
 	public static void saveLastJobs(List<ColorRunnable> jobs) {
 		save(jobs, LAST_JOBS_FILE);
-		/*try {
-			ObjectMapper mapper= new ObjectMapper();
-			mapper.setVisibility(PropertyAccessor.ALL, Visibility.NONE);
-			mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-			
-			mapper.writeValue(getFile(LAST_JOBS_FILE), new ListWrapper<ColorRunnable>(jobs));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
 	}
 	
 	public static List<ColorRunnable> loadLastJobs() {
 		return load(LAST_JOBS_FILE);
-		
-		/*try {
-			File lastJobs= getFile(LAST_JOBS_FILE);
-			return loadLastJobs(lastJobs);
-		} catch (Exception e) {
-			e.printStackTrace(); //TODO logging
-		}
-		return Collections.emptyList();*/
 	}	
+	
+	public static int getAvailableCores() {
+		int corePoolSize = Runtime.getRuntime().availableProcessors();
+		return corePoolSize<=1 ? corePoolSize : corePoolSize-1;
+	}
 }
 
 final class ListWrapper<T>{

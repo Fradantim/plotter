@@ -69,7 +69,7 @@ public class TrapezoidsINProcesor extends INProcessor{
 			renderizables.add(s);
 		}
 		
-		toString+="; area="+area;
+		toString+="; area="+String.format("%."+2+"f",area);
 		return renderizables;
 	}
 

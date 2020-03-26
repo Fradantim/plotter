@@ -36,9 +36,10 @@ public class INImplementations {
 			*/
 			
 			String function = "p(t,-2)";
+			//String function = "sin(t)";
 			p.addColorRunnable(TaskGenerator.getSimpleFunctionTask(p, vars, function, Color.GREEN));
 			p.addColorRunnable(TaskGenerator.getTrapezoidsIN(p, vars, function, -4F, -1F, 1F, null, Color.BLUE));
-			p.addColorRunnable(TaskGenerator.getRandomIN(p, vars, function, 1F, 4F, 100, Color.RED));
+			p.addColorRunnable(TaskGenerator.getRandomIN(p, vars, function, 1F, 4F, 1000, Color.RED));
 			
 		} catch (Exception e) {
 			e.printStackTrace();

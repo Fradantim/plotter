@@ -58,7 +58,11 @@ public abstract class Plotter implements ApplicationListener {
 	
 	protected List<RenderizableComponent> components = new ArrayList<>();
 	
-	private ExecutorService service;
+	public static final ExecutorService service;
+	
+	static {
+		service = Executors.newFixedThreadPool(FileSystemUtil.getAvailableCores());
+	}
 	
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd HHmmss");
 	
@@ -68,11 +72,7 @@ public abstract class Plotter implements ApplicationListener {
 	protected Plotter(boolean fullScreen) {
 		this.fullScreen=fullScreen;
 	}
-	public Plotter() {
-		int corePoolSize = Runtime.getRuntime().availableProcessors();
-		corePoolSize = corePoolSize<=1 ? corePoolSize : corePoolSize-1;
-		service = Executors.newFixedThreadPool(corePoolSize);
-	}
+	public Plotter() { }
 	
 	@Override
 	public void create () {
