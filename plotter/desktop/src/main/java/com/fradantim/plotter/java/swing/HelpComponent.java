@@ -42,7 +42,7 @@ public class HelpComponent implements ComponentGenerator{
 		keyInnerPanel.add(new JLabel("Salir de pantalla completa."));
 		
 		keyInnerPanel.add(labelInBlack("[F3]"));
-		keyInnerPanel.add(new JLabel("Mostrar texto en pantalla ."));
+		keyInnerPanel.add(new JLabel("Apagar / Mostrar texto en pantalla ."));
 		
 		keyInnerPanel.add(labelInBlack("[F4]"));
 		keyInnerPanel.add(new JLabel("Cambiar pantalla completa / ventana."));
@@ -77,11 +77,11 @@ public class HelpComponent implements ComponentGenerator{
 		keyInnerPanel.add(labelInHtml(inBlack("Producto: ")+"a*b"));
 		
 		keyInnerPanel.add(labelInHtml("a / b"));
-		keyInnerPanel.add(labelInHtml(inBlack("Division: ")+"a/b"));
+		keyInnerPanel.add(labelInHtml(inBlack("División: ")+"a/b"));
 		
 		simpleOpPanel.add(keyInnerPanel);
 		
-		simpleOpPanel.add(labelInBlack("Dividir por 0 no va a romper la apliación, se va a romper por sus propios medios."));
+		simpleOpPanel.add(labelInBlack("Dividir por 0 no va a romper la aplicaión, se va a romper por sus propios medios."));
 		
 		simpleOpPanel.add(new JSeparator(), BorderLayout.CENTER);
 		
