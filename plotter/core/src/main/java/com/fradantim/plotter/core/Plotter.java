@@ -67,7 +67,7 @@ public abstract class Plotter implements ApplicationListener {
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd HHmmss");
 	
 	//PARA DEBUG
-	protected boolean debugOnScreen = true, listStadistics = true, drawGrid = true;
+	protected boolean debugOnScreen = true;
 	
 	protected Plotter(boolean fullScreen) {
 		this.fullScreen=fullScreen;
@@ -86,16 +86,13 @@ public abstract class Plotter implements ApplicationListener {
 		
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		
-		start();
 		switchScreenMode(fullScreen);
 		
 		afterCreate();
 	}
 	
 	protected abstract void afterCreate();
-	
-	public void start() { }
-	 
+		 
 	@Override
 	public void render () {
 		if(firstRender) {
@@ -141,21 +138,9 @@ public abstract class Plotter implements ApplicationListener {
 		if(isKeyJustPressed(Keys.ESCAPE)) {
 			Gdx.app.exit();
 		}
-		
-		if(isKeyJustPressed(Keys.F1)) {
-			start();
-		}
-		
+
 		if(isKeyJustPressed(Keys.F3)) {
 			debugOnScreen = (debugOnScreen) ? false : true;
-		}
-		
-		if(isKeyJustPressed(Keys.NUM_1)) {
-			listStadistics = (listStadistics) ? false : true;
-		}
-		
-		if(isKeyJustPressed(Keys.NUM_2)) {
-			drawGrid = (drawGrid) ? false : true;
 		}
 		
 		if(isKeyJustPressed(Keys.F6)) {
@@ -207,17 +192,15 @@ public abstract class Plotter implements ApplicationListener {
 	private void debugOnScreen() {
 		batch.begin();
 	
-		if(listStadistics) {
-			String statsStr = String.join("\n",getStadistics().stream().map(Stadistic::toString).collect(Collectors.toList()));
-			FontUtils.getOnScreenFont(fontSize, Colorizer.DEFAULT_COLOR).draw(batch, statsStr, getCamTopLeft().x, getCamTopLeft().y);
+		String statsStr = String.join("\n",getStadistics().stream().map(Stadistic::toString).collect(Collectors.toList()));
+		FontUtils.getOnScreenFont(fontSize, Colorizer.DEFAULT_COLOR).draw(batch, statsStr, getCamTopLeft().x, getCamTopLeft().y);
 
-			for(int i=0; i<components.size(); i++) {
-				if(components.get(i)!=null) {
-					RenderizableComponent component = components.get(i); 
-					String key="[#"+(i+1) +"] ~> ";
-					FontUtils.getOnScreenFont(fontSize, component.getColor()   ).draw(batch, key, getCamTopLeft().x , getCamTopLeft().y-(i+getStadistics().size())*fontSize);
-					FontUtils.getOnScreenFont(fontSize, Colorizer.DEFAULT_COLOR).draw(batch,component.toString(), getCamTopLeft().x+(key.length()-3)*fontSize, getCamTopLeft().y-(i+getStadistics().size())*fontSize);
-				}
+		for(int i=0; i<components.size(); i++) {
+			if(components.get(i)!=null) {
+				RenderizableComponent component = components.get(i); 
+				String key="[#"+(i+1) +"] ~> ";
+				FontUtils.getOnScreenFont(fontSize, component.getColor()   ).draw(batch, key, getCamTopLeft().x , getCamTopLeft().y-(i+getStadistics().size())*fontSize);
+				FontUtils.getOnScreenFont(fontSize, Colorizer.DEFAULT_COLOR).draw(batch,component.toString(), getCamTopLeft().x+(key.length()-3)*fontSize, getCamTopLeft().y-(i+getStadistics().size())*fontSize);
 			}
 		}
 		batch.end();

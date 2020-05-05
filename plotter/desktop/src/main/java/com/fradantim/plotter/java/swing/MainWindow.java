@@ -73,7 +73,7 @@ public class MainWindow{
 			listJpanel.add(new Label("Elija elementos para cargar ^"), BorderLayout.NORTH);
 		}
 		
-		listJpanel.add(new JSeparator(), BorderLayout.CENTER);
+		//listJpanel.add(new JSeparator(), BorderLayout.CENTER);
 		
 		return listJpanel;
 	}
@@ -95,7 +95,7 @@ public class MainWindow{
 		frame.setVisible(false);
 		Container pane = frame.getContentPane();
 		pane.removeAll();
-		pane.setLayout(new GridLayout(0,1));
+		pane.setLayout(new SizeableGridLayout(1,0));
 		pane.add(drawList());
 		if(newComponent!=null) {
 			pane.add(newComponent);

@@ -68,6 +68,12 @@ public class MenuBar {
 			}
 		});
 		help=new JMenuItem("Ayuda");
+		help.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				MainWindow.drawMainWindow(HelpComponent.getSettingsComponent().getComponent());
+			}
+		});
 		
 		start.add(graph);
 		start.add(settings);
