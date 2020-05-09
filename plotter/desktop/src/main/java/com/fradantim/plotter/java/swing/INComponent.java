@@ -19,7 +19,7 @@ import com.fradantim.plotter.core.renderizable.generator.Colorizer;
 
 public abstract class INComponent implements ComponentGenerator{
 	
-	protected static final List<String> vars=Arrays.asList("t","x");
+	protected static final List<String> vars=Arrays.asList("t");
 
 	protected JTextField functionTF = new JTextField();
 	protected JTextField aTF = new JTextField();
@@ -27,7 +27,7 @@ public abstract class INComponent implements ComponentGenerator{
 	protected JTextField hTF = new JTextField();
 	protected JTextField NTF = new JTextField();
 	
-	protected JLabel functionLabel = new JLabel("f(t,x): ");
+	protected JLabel functionLabel = new JLabel("f(t): ");
 	protected JLabel aLabel = new JLabel("a: ");
 	protected JLabel bLabel = new JLabel("b: ");
 	protected JLabel TLabel = new JLabel("T: ");
