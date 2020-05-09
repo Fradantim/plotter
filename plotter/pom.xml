@@ -14,7 +14,7 @@
 		<gwt.version>2.6.0</gwt.version>
 		<gwt.maven.version>2.6.0</gwt.maven.version>
 		<gdx.version>1.9.10</gdx.version>
-		<java.version>9</java.version>
+		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
@@ -179,5 +179,6 @@
 
 	<modules>
 		<module>core</module>
+		<module>desktop</module>
 	</modules>
 </project>
